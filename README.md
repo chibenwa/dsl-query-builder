@@ -95,7 +95,7 @@ Would give :
 System.out.println(new DSLBoolQuery()
 						.must(new DSLMatchQuery("user", "kimchi"))
                         .must(new DSLMatchQuery("article", "travel"))
-                        .should(new DSLMatchQuery("location, "Paris"))
+                        .should(new DSLMatchQuery("location", "Paris"))
                         .should(new DSLMatchQuery("location", "London"))
                         .must_not(new DSLMatchQuery("media", "Television"))
 						.getQueryAsJson()
