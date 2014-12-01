@@ -128,4 +128,15 @@ public class DSLFilterTest {
         assertEquals("{\"nested\":{\"path\":\"blog\",\"filter\":{\"term\":{\"blog.user\":\"benwa\"}}}}", nestedFilter.getQueryAsJson().toString());
     }
 
+    @Test
+    public void testExistFilter() {
+        DSLFilter dslFilter = new DSLExistFilter("user");
+        assertEquals("{\"exists\":{\"field\":\"user\"}}", dslFilter.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void testExistFilterNullValue() {
+        DSLFilter dslFilter = new DSLExistFilter("user").setNullValue("@_@");
+        assertEquals("{\"exists\":{\"field\":\"user\",\"null_value\":\"@_@\"}}", dslFilter.getQueryAsJson().toString());
+    }
 }

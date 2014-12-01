@@ -39,6 +39,9 @@ public interface DSLFilter {
     public final String NESTED = "nested";
     public final String PATH = "path";
     public final String FILTER = "filter";
+    public final String EXISTS = "exists";
+    public final String FIELD = "field";
+    public final String NULL_VALUE = "null_value";
 
     /**
      *
