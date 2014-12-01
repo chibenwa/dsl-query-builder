@@ -22,16 +22,18 @@ public class DSLFilteredQuery implements DSLQuery {
         return filter;
     }
 
-    public void setFilter(DSLFilter filter) {
+    public DSLFilteredQuery setFilter(DSLFilter filter) {
         this.filter = filter;
+        return this;
     }
 
     public DSLQuery getQuery() {
         return query;
     }
 
-    public void setQuery(DSLQuery query) {
+    public DSLFilteredQuery setQuery(DSLQuery query) {
         this.query = query;
+        return this;
     }
 
     public JsonObject getQueryAsJson() {

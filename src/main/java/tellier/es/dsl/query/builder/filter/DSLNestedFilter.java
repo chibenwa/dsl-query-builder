@@ -26,24 +26,27 @@ public class DSLNestedFilter implements DSLFilter {
         return path;
     }
 
-    public void setPath(String path) {
+    public DSLNestedFilter setPath(String path) {
         this.path = path;
+        return this;
     }
 
     public DSLFilter getSubFilter() {
         return subFilter;
     }
 
-    public void setSubFilter(DSLFilter subFilter) {
+    public DSLNestedFilter setSubFilter(DSLFilter subFilter) {
         this.subFilter = subFilter;
+        return this;
     }
 
     public boolean isCache() {
         return cache;
     }
 
-    public void setCache(boolean cache) {
+    public DSLNestedFilter setCache(boolean cache) {
         this.cache = cache;
+        return this;
     }
 
     public JsonObject getQueryAsJson() {

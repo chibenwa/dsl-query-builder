@@ -51,23 +51,26 @@ public class DSLNestedQuery implements DSLQuery {
         return path;
     }
 
-    public void setPath(String path) {
+    public DSLNestedQuery setPath(String path) {
         this.path = path;
+        return this;
     }
 
     public Score_mode getScoreMode() {
         return scoreMode;
     }
 
-    public void setScoreMode(Score_mode scoreMode) {
+    public DSLNestedQuery setScoreMode(Score_mode scoreMode) {
         this.scoreMode = scoreMode;
+        return this;
     }
 
     public DSLQuery getSubQuery() {
         return subQuery;
     }
 
-    public void setSubQuery(DSLQuery subQuery) {
+    public DSLNestedQuery setSubQuery(DSLQuery subQuery) {
         this.subQuery = subQuery;
+        return this;
     }
 }

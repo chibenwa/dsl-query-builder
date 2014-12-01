@@ -22,7 +22,8 @@ package tellier.es.dsl.query.builder.query;
  * Represents a should not query, combining sub queries
  */
 public class DSLMustNotQuery extends DSLBoolQuery implements DSLSpecializedBoolQuery {
-    public void addQuery(DSLQuery query) {
+    public DSLSpecializedBoolQuery addQuery(DSLQuery query) {
         must_not(query);
+        return this;
     }
 }

@@ -22,7 +22,8 @@ package tellier.es.dsl.query.builder.query;
  * Represents  a must query, combining sub queries
  */
 public class DSLMustQuery extends DSLBoolQuery implements DSLSpecializedBoolQuery {
-    public void addQuery(DSLQuery query) {
+    public DSLSpecializedBoolQuery addQuery(DSLQuery query) {
         must(query);
+        return this;
     }
 }

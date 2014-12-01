@@ -57,16 +57,19 @@ public class DSLBoolQuery implements DSLQuery {
         queries.add(query);
     }*/
 
-    public void must(DSLQuery query) {
+    public DSLBoolQuery must(DSLQuery query) {
         mustQueries.add(query);
+        return this;
     }
 
-    public void should(DSLQuery query) {
+    public DSLBoolQuery should(DSLQuery query) {
         shouldQueries.add(query);
+        return this;
     }
 
-    public void must_not(DSLQuery query) {
+    public DSLBoolQuery must_not(DSLQuery query) {
         must_notQueries.add(query);
+        return this;
     }
 
     protected JsonArray getQueriesJsonArray(List<DSLQuery> queries) {

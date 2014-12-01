@@ -44,8 +44,9 @@ public abstract class DSLBooleanOperationFilter implements DSLFilter {
     /**
      * @param query A filter you want to add to the sub filters
      */
-    public void addFilter(DSLFilter query) {
+    public DSLBooleanOperationFilter addFilter(DSLFilter query) {
         filters.add(query);
+        return this;
     }
 
     public abstract JsonObject getQueryAsJson();
