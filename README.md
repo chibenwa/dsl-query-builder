@@ -10,7 +10,7 @@ To solve this problem, I decided to write my own query builder, with only a depa
 
 ## How does it work ?
 
-Using it is very simple... First have a look to [queries]() and [filters]() to know what kind of query you can perform with Elastic Search. Names used in this project are very similar, so finding the stuff you need should not be too complicated.
+Using it is very simple... First have a look to [queries](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-queries.html) and [filters](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-filters.html) to know what kind of query you can perform with Elastic Search. Names used in this project are very similar, so finding the stuff you need should not be too complicated.
 
 You have two basic objects :
 
