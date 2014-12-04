@@ -39,6 +39,7 @@ public class DSLMatchQuery implements DSLQuery{
     public final String ALL = "all";
     public final String PHRASE = "phrase";
     public final String PHRASE_PREFIX = "phrase_prefix";
+    public final String FUZZINESS = "fuzziness";
 
     private String field;
     private String searchCriterion;
@@ -51,6 +52,7 @@ public class DSLMatchQuery implements DSLQuery{
     private String minimumShouldMatch;
     private Integer slop; // Only used by MATCH_PHRASE and MATCH_PHRASE_PREFIX
     private Zero_Terms_Query zero_terms_query;
+    private Integer fuzziness;
 
     enum Zero_Terms_Query {
         NONE,
@@ -68,7 +70,7 @@ public class DSLMatchQuery implements DSLQuery{
         this.type = Type.MATCH;
         this.lenient = false;
         this.zero_terms_query = Zero_Terms_Query.NONE;
-        }
+    }
 
     public DSLMatchQuery setOperator(Operator operator) {
         this.operator = operator;
@@ -110,8 +112,13 @@ public class DSLMatchQuery implements DSLQuery{
         return this;
     }
 
-    public DSLMatchQuery setZroTermsQuery(Zero_Terms_Query zero_terms_query) {
+    public DSLMatchQuery setZeroTermsQuery(Zero_Terms_Query zero_terms_query) {
         this.zero_terms_query = zero_terms_query;
+        return this;
+    }
+
+    public DSLMatchQuery setFuzziness(Integer fuzziness) {
+        this.fuzziness = fuzziness;
         return this;
     }
 
@@ -130,7 +137,7 @@ public class DSLMatchQuery implements DSLQuery{
         if(field.isEmpty() || searchCriterion.isEmpty()) {
             return null;
         }
-        if(analyser == null && !lenient && max_expansions == null && cutoff_frequency == null && type == Type.MATCH && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE) {
+        if(analyser == null && !lenient && max_expansions == null && cutoff_frequency == null && type == Type.MATCH && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null) {
             return classicQuery();
         } else {
             JsonObject matchJson = new JsonObject();
@@ -176,6 +183,9 @@ public class DSLMatchQuery implements DSLQuery{
         }
         if(zero_terms_query == Zero_Terms_Query.ALL) {
             queryJson.add(ZERO_TERMS_QUERY, new JsonPrimitive(ALL));
+        }
+        if(fuzziness != null) {
+            queryJson.add(FUZZINESS, new JsonPrimitive(fuzziness));
         }
         JsonObject result = new JsonObject();
         result.add(field, queryJson);

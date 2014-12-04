@@ -56,14 +56,20 @@ public class AdvancedMatchQueryTest {
     }
 
     @Test
-    public void minimumShouldMatch() {
+    public void minimumShouldMatchTest() {
         DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setMinimumShouldMatch("75%");
         assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"minimum_should_match\":\"75%\"}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 
     @Test
-    public void zeroTermsQuery() {
-        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setZroTermsQuery(DSLMatchQuery.Zero_Terms_Query.ALL);
+    public void zeroTermsQueryTest() {
+        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setZeroTermsQuery(DSLMatchQuery.Zero_Terms_Query.ALL);
         assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"zero_terms_query\":\"all\"}}}", dslMatchQuery.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void fuzzinessTest() {
+        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setFuzziness(2);
+        assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"fuzziness\":2}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 }
