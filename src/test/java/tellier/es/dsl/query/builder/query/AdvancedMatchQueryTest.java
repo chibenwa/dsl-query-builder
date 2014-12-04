@@ -1,6 +1,7 @@
 package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,10 +28,11 @@ public class AdvancedMatchQueryTest {
     public void matchPhraseTest() {
         DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "a long phrase").setType(DSLMatchQuery.Type.MATCH_PHRASE);
         assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase\"}}}", dslMatchQuery.getQueryAsJson().toString());
+        // Don't worry, max expansions is accepted by elasticSearch but not taken into account if it is not applied to a phrase_prefix
         dslMatchQuery.setMaxExpansion((long)53);
-        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase\"}}}", dslMatchQuery.getQueryAsJson().toString());
+        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase\",\"max_expansions\":53}}}", dslMatchQuery.getQueryAsJson().toString());
         dslMatchQuery.setSlop(42);
-        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase\",\"slop\":42}}}", dslMatchQuery.getQueryAsJson().toString());
+        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase\",\"slop\":42,\"max_expansions\":53}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 
     @Test
@@ -40,12 +42,12 @@ public class AdvancedMatchQueryTest {
         dslMatchQuery.setMaxExpansion((long)53);
         assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase_prefix\",\"max_expansions\":53}}}", dslMatchQuery.getQueryAsJson().toString());
         dslMatchQuery.setSlop(42);
-        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase_prefix\",\"max_expansions\":53,\"slop\":42}}}", dslMatchQuery.getQueryAsJson().toString());
+        assertEquals("{\"match\":{\"field\":{\"query\":\"a long phrase\",\"type\":\"phrase_prefix\",\"slop\":42,\"max_expansions\":53}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 
     @Test
     public void operatorTest() {
-        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setOperator(DSLMatchQuery.Operator.AND);
+        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setOperator(MatchUtilities.Operator.AND);
         assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"operator\":\"and\"}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 
@@ -63,7 +65,7 @@ public class AdvancedMatchQueryTest {
 
     @Test
     public void zeroTermsQueryTest() {
-        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setZeroTermsQuery(DSLMatchQuery.Zero_Terms_Query.ALL);
+        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setZeroTermsQuery(MatchUtilities.Zero_Terms_Query.ALL);
         assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"zero_terms_query\":\"all\"}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 

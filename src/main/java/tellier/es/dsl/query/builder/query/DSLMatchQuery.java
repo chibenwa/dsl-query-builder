@@ -20,65 +20,40 @@ package tellier.es.dsl.query.builder.query;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 /**
  * Represents a query getting documents matching a search criterion in a given field.
  */
 public class DSLMatchQuery implements DSLQuery{
     public final String MATCH = "match";
-    public final String OPERATOR = "operator";
-    public final String AND = "and";
-    public final String MINIMUM_SHOULD_MATCH = "minimum_should_match";
-    public final String ANALYZER = "analyzer";
     public final String LENIENT = "lenient";
-    public final String CUT_OFF_FREQUENCY = "cutoff_frequency";
     public final String TYPE = "type";
     public final String SLOP = "slop";
-    public final String MAX_EXPANSIONS = "max_expansions";
-    public final String ZERO_TERMS_QUERY = "zero_terms_query";
-    public final String ALL = "all";
     public final String PHRASE = "phrase";
     public final String PHRASE_PREFIX = "phrase_prefix";
-    public final String FUZZINESS = "fuzziness";
 
     private String field;
     private String searchCriterion;
-    private Operator operator;
     private Type type;
-    private String analyser; // Not used when type MATCH
-    private Long max_expansions; // Only used for MATCH_PHRASE_PREFIX
     private boolean lenient;
-    private Double cutoff_frequency;
-    private String minimumShouldMatch;
     private Integer slop; // Only used by MATCH_PHRASE and MATCH_PHRASE_PREFIX
-    private Zero_Terms_Query zero_terms_query;
-    private Integer fuzziness;
-
-    enum Zero_Terms_Query {
-        NONE,
-        ALL
-    }
+    private MatchUtilities matchUtilities;
 
     /**
      * @param field The document field you want to search into
      * @param searchCriterion The pattern you want to search
      */
     public DSLMatchQuery(String field, String searchCriterion) {
+        this.matchUtilities = new MatchUtilities();
         this.field = field;
         this.searchCriterion = searchCriterion;
-        this.operator = Operator.OR;
         this.type = Type.MATCH;
         this.lenient = false;
-        this.zero_terms_query = Zero_Terms_Query.NONE;
     }
 
-    public DSLMatchQuery setOperator(Operator operator) {
-        this.operator = operator;
-        return this;
-    }
-
-    public DSLMatchQuery setMinimumShouldMatch(String minimumShouldMatch) {
-        this.minimumShouldMatch = minimumShouldMatch;
+    public DSLMatchQuery setSlop(Integer slop) {
+        this.slop = slop;
         return this;
     }
 
@@ -87,47 +62,49 @@ public class DSLMatchQuery implements DSLQuery{
         return this;
     }
 
-    public DSLMatchQuery setAnalyser(String analyser) {
-        this.analyser = analyser;
-        return this;
-    }
+
 
     public DSLMatchQuery setLenient(boolean lenient) {
         this.lenient = lenient;
         return this;
     }
 
+    public DSLMatchQuery setAnalyser(String analyser) {
+        matchUtilities.setAnalyser(analyser);
+        return this;
+    }
+
     public DSLMatchQuery setMaxExpansion(Long max_expansions) {
-        this.max_expansions = max_expansions;
+        matchUtilities.setMax_expansions(max_expansions);
         return this;
     }
 
     public DSLMatchQuery setCutoff_Frequency(Double cutoff_frequency) {
-        this.cutoff_frequency = cutoff_frequency;
+        matchUtilities.setCutoff_frequency(cutoff_frequency);
         return this;
     }
 
-    public DSLMatchQuery setSlop(Integer slop) {
-        this.slop = slop;
+    public DSLMatchQuery setOperator(MatchUtilities.Operator operator) {
+        matchUtilities.setOperator(operator);
         return this;
     }
 
-    public DSLMatchQuery setZeroTermsQuery(Zero_Terms_Query zero_terms_query) {
-        this.zero_terms_query = zero_terms_query;
+    public DSLMatchQuery setMinimumShouldMatch(String minimumShouldMatch) {
+        matchUtilities.setMinimumShouldMatch(minimumShouldMatch);
+        return this;
+    }
+
+    public DSLMatchQuery setZeroTermsQuery(MatchUtilities.Zero_Terms_Query zero_terms_query) {
+        matchUtilities.setZero_terms_query(zero_terms_query);
         return this;
     }
 
     public DSLMatchQuery setFuzziness(Integer fuzziness) {
-        this.fuzziness = fuzziness;
+        matchUtilities.setFuzziness(fuzziness);
         return this;
     }
 
-    enum Operator {
-        AND,
-        OR
-    }
-
-    enum Type {
+    public enum Type {
         MATCH,
         MATCH_PHRASE,
         MATCH_PHRASE_PREFIX
@@ -137,7 +114,7 @@ public class DSLMatchQuery implements DSLQuery{
         if(field.isEmpty() || searchCriterion.isEmpty()) {
             return null;
         }
-        if(analyser == null && !lenient && max_expansions == null && cutoff_frequency == null && type == Type.MATCH && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null) {
+        if(matchUtilities.isEmpty() && type == Type.MATCH && !lenient) {
             return classicQuery();
         } else {
             JsonObject matchJson = new JsonObject();
@@ -150,15 +127,6 @@ public class DSLMatchQuery implements DSLQuery{
     private JsonObject prepareJsonQuery() {
         JsonObject queryJson = new JsonObject();
         queryJson.add(QUERY, new JsonPrimitive(searchCriterion) );
-        if(operator == Operator.AND) {
-            queryJson.add(OPERATOR, new JsonPrimitive(AND) );
-        }
-        if(minimumShouldMatch != null) {
-            queryJson.add(MINIMUM_SHOULD_MATCH, new JsonPrimitive(minimumShouldMatch) );
-        }
-        if(analyser != null) {
-            queryJson.add(ANALYZER, new JsonPrimitive(analyser));
-        }
         if(type != Type.MATCH) {
             switch (type) {
                 case MATCH_PHRASE:
@@ -166,9 +134,6 @@ public class DSLMatchQuery implements DSLQuery{
                     break;
                 case MATCH_PHRASE_PREFIX:
                     queryJson.add(TYPE, new JsonPrimitive(PHRASE_PREFIX));
-                    if(max_expansions != null) {
-                        queryJson.add(MAX_EXPANSIONS, new JsonPrimitive(max_expansions));
-                    }
                     break;
             }
             if(slop != null) {
@@ -178,15 +143,7 @@ public class DSLMatchQuery implements DSLQuery{
         if(lenient) {
             queryJson.add(LENIENT, new JsonPrimitive(true));
         }
-        if(cutoff_frequency != null) {
-            queryJson.add(CUT_OFF_FREQUENCY, new JsonPrimitive(cutoff_frequency));
-        }
-        if(zero_terms_query == Zero_Terms_Query.ALL) {
-            queryJson.add(ZERO_TERMS_QUERY, new JsonPrimitive(ALL));
-        }
-        if(fuzziness != null) {
-            queryJson.add(FUZZINESS, new JsonPrimitive(fuzziness));
-        }
+        matchUtilities.applyMatchUtilitiesOnJson(queryJson);
         JsonObject result = new JsonObject();
         result.add(field, queryJson);
         return result;
