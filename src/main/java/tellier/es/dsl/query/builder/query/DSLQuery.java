@@ -30,7 +30,6 @@ public interface DSLQuery {
     public final String MUST = "must";
     public final String SHOULD = "should";
     public final String MUST_NOT = "must_not";
-    public final String MATCH = "match";
     public final String NESTED = "nested";
     public final String SCORE_MODE = "score_mode";
     public final String PATH = "path";
@@ -40,8 +39,6 @@ public interface DSLQuery {
     public final String MAX = "max";
     public final String NONE = "none";
     public final String QUERY = "query";
-    public final String FILTER = "filter";
-    public final String FILTERED = "filtered";
 
     /**
      *

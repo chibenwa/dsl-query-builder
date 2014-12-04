@@ -91,7 +91,6 @@ Would give :
   - DSLBoolQuery
 
 ```java
-
 System.out.println(new DSLBoolQuery()
 						.must(new DSLMatchQuery("user", "kimchi"))
                         .must(new DSLMatchQuery("article", "travel"))
@@ -170,7 +169,7 @@ would give :
 
 ## What to come ?
 
-I will implement each DSL operation you can perform with Elastic Search. Just give me one or two mounths to write it down...
+I will implement each DSL operation you can perform with Elastic Search. Just give me one or two months to write it down...
 
 ## License
 
