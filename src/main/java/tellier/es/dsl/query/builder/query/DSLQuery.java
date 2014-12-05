@@ -39,6 +39,7 @@ public interface DSLQuery {
     public final String MAX = "max";
     public final String NONE = "none";
     public final String QUERY = "query";
+    public final String TYPE = "type";
 
     /**
      *

@@ -28,7 +28,6 @@ import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 public class DSLMatchQuery implements DSLQuery{
     public final String MATCH = "match";
     public final String LENIENT = "lenient";
-    public final String TYPE = "type";
     public final String SLOP = "slop";
     public final String PHRASE = "phrase";
     public final String PHRASE_PREFIX = "phrase_prefix";
