@@ -1,6 +1,8 @@
 package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.filter.DSLExistFilter;
+import tellier.es.dsl.query.builder.filter.DSLFilter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,4 +60,14 @@ public class DSLQueriesTest {
         assertEquals("{\"nested\":{\"path\":\"nested\",\"score_mode\":\"sum\",\"query\":{\"match\":{\"nested.user\":\"kimchi\"}}}}", query.getQueryAsJson().toString());
     }
 
+    @Test
+    public void constantScoreQueryTest() {
+        DSLQuery dslQuery = new DSLMatchQuery("user", "kimchi");
+        DSLQuery dslQueryConstant = new DSLConstantScoreQuery(dslQuery,1.2);
+        assertEquals("{\"constant_score\":{\"query\":{\"match\":{\"user\":\"kimchi\"}},\"boost\":1.2}}", dslQueryConstant.getQueryAsJson().toString());
+        DSLFilter filter = new DSLExistFilter("text");
+        dslQueryConstant = new DSLConstantScoreQuery(filter, 0.8);
+        System.out.println(dslQueryConstant.getQueryAsJson());
+        assertEquals("{\"constant_score\":{\"filter\":{\"exists\":{\"field\":\"text\"}},\"boost\":0.8}}", dslQueryConstant.getQueryAsJson().toString());
+    }
 }
