@@ -67,7 +67,16 @@ public class DSLQueriesTest {
         assertEquals("{\"constant_score\":{\"query\":{\"match\":{\"user\":\"kimchi\"}},\"boost\":1.2}}", dslQueryConstant.getQueryAsJson().toString());
         DSLFilter filter = new DSLExistFilter("text");
         dslQueryConstant = new DSLConstantScoreQuery(filter, 0.8);
-        System.out.println(dslQueryConstant.getQueryAsJson());
         assertEquals("{\"constant_score\":{\"filter\":{\"exists\":{\"field\":\"text\"}},\"boost\":0.8}}", dslQueryConstant.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void boostingQueriesTest() {
+        DSLQuery positiveQuery = new DSLMatchAllQuery();
+        DSLQuery negativeQuery = new DSLMatchQuery("user", "kimchi");
+        DSLBoostingQuery dslBoostingQuery = new DSLBoostingQuery(positiveQuery, negativeQuery, 0.2);
+        assertEquals("{\"boosting\":{\"positive\":{\"match_all\":{}},\"negative\":{\"match\":{\"user\":\"kimchi\"}},\"negative_boost\":0.2}}", dslBoostingQuery.getQueryAsJson().toString());
+        dslBoostingQuery.setBoost(0.3);
+        assertEquals("{\"boosting\":{\"positive\":{\"match_all\":{}},\"negative\":{\"match\":{\"user\":\"kimchi\"}},\"negative_boost\":0.2,\"boost\":0.3}}", dslBoostingQuery.getQueryAsJson().toString());
     }
 }
