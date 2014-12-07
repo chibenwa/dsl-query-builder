@@ -1,6 +1,7 @@
 package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
 import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 import static org.junit.Assert.assertEquals;
@@ -73,5 +74,11 @@ public class AdvancedMatchQueryTest {
     public void fuzzinessTest() {
         DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setFuzziness(2);
         assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"fuzziness\":2}}}", dslMatchQuery.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void minimumShouldMatchObjectTest() {
+        DSLMatchQuery dslMatchQuery = new DSLMatchQuery("field", "value").setMinimumShouldMatch(new DSLMinimumShouldMatch("1","2"));
+        assertEquals("{\"match\":{\"field\":{\"query\":\"value\",\"minimum_should_match\":{\"low_freq\":\"1\",\"high_freq\":\"2\"}}}}", dslMatchQuery.getQueryAsJson().toString());
     }
 }

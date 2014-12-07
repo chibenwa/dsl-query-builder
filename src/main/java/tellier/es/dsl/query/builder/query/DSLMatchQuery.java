@@ -20,6 +20,7 @@ package tellier.es.dsl.query.builder.query;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
 import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 /**
@@ -107,6 +108,11 @@ public class DSLMatchQuery implements DSLQuery{
         MATCH,
         MATCH_PHRASE,
         MATCH_PHRASE_PREFIX
+    }
+
+    public DSLMatchQuery setMinimumShouldMatch(DSLMinimumShouldMatch minimumShouldMatch) {
+        matchUtilities.setMinimumShouldMatch(minimumShouldMatch);
+        return this;
     }
 
     public JsonObject getQueryAsJson() {

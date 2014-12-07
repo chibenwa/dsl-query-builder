@@ -25,6 +25,7 @@ public class MatchUtilities {
     private Integer fuzziness;
     private Long max_expansions;
     private Zero_Terms_Query zero_terms_query;
+    private DSLMinimumShouldMatch minimumShouldMatchObject;
 
 
     public MatchUtilities() {
@@ -99,15 +100,23 @@ public class MatchUtilities {
     }
 
     public boolean isEmpty() {
-        return (analyser == null && max_expansions == null && cutoff_frequency == null && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null);
+        return (analyser == null && max_expansions == null && cutoff_frequency == null && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null && minimumShouldMatchObject == null );
+    }
+
+    public void setMinimumShouldMatch(DSLMinimumShouldMatch dslMinimumShouldMatchObject) {
+        this.minimumShouldMatchObject = dslMinimumShouldMatchObject;
     }
 
     public void applyMatchUtilitiesOnJson(JsonObject queryJson) {
         if(operator == Operator.AND) {
             queryJson.add(OPERATOR, new JsonPrimitive(AND) );
         }
-        if(minimumShouldMatch != null) {
-            queryJson.add(MINIMUM_SHOULD_MATCH, new JsonPrimitive(minimumShouldMatch) );
+        if(minimumShouldMatchObject != null) {
+            queryJson.add(MINIMUM_SHOULD_MATCH, minimumShouldMatchObject.getParameterAsJson());
+        } else {
+            if(minimumShouldMatch != null) {
+                queryJson.add(MINIMUM_SHOULD_MATCH, new JsonPrimitive(minimumShouldMatch) );
+            }
         }
         if(analyser != null) {
             queryJson.add(ANALYZER, new JsonPrimitive(analyser));

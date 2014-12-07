@@ -3,6 +3,7 @@ package tellier.es.dsl.query.builder.query;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
 import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 import java.util.ArrayList;
@@ -134,6 +135,11 @@ public class DSLMultiMatchQuery implements DSLQuery{
 
     public DSLMultiMatchQuery setFuzziness(Integer fuzziness) {
         matchUtilities.setFuzziness(fuzziness);
+        return this;
+    }
+
+    public DSLMultiMatchQuery setMinimumShouldMatch(DSLMinimumShouldMatch minimumShouldMatch) {
+        matchUtilities.setMinimumShouldMatch(minimumShouldMatch);
         return this;
     }
 }
