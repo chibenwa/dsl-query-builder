@@ -1,6 +1,7 @@
 package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
 import tellier.es.dsl.query.builder.filter.DSLExistFilter;
 import tellier.es.dsl.query.builder.filter.DSLFilter;
 
@@ -78,5 +79,16 @@ public class DSLQueriesTest {
         assertEquals("{\"boosting\":{\"positive\":{\"match_all\":{}},\"negative\":{\"match\":{\"user\":\"kimchi\"}},\"negative_boost\":0.2}}", dslBoostingQuery.getQueryAsJson().toString());
         dslBoostingQuery.setBoost(0.3);
         assertEquals("{\"boosting\":{\"positive\":{\"match_all\":{}},\"negative\":{\"match\":{\"user\":\"kimchi\"}},\"negative_boost\":0.2,\"boost\":0.3}}", dslBoostingQuery.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void commonQueryTest() {
+        DSLQuery dslQuery = new DSLCommonQuery("to be or not to be")
+                .setMinimumShouldMatch(
+                        new DSLMinimumShouldMatch("2", "3")
+                )
+                .setHighFrequencyOperator(DSLCommonQuery.Freq_operator.AND)
+                .setAnalyzer("my_analyser");
+        assertEquals("{\"common\":{\"body\":{\"query\":\"to be or not to be\",\"minimum_should_match\":{\"low_freq\":\"2\",\"high_freq\":\"3\"},\"analyzer\":\"my_analyser\",\"high_freq_operator\":\"and\"}}}", dslQuery.getQueryAsJson().toString());
     }
 }

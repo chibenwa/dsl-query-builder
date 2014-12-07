@@ -24,6 +24,8 @@ import com.google.gson.JsonObject;
  * Return a query that match any document.
  */
 public class DSLMatchAllQuery implements DSLQuery {
+    public final String MATCH_ALL = "match_all";
+
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
         result.add(MATCH_ALL, new JsonObject());

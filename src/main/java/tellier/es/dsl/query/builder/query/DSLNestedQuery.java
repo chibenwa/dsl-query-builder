@@ -7,6 +7,8 @@ import com.google.gson.JsonPrimitive;
  *
  */
 public class DSLNestedQuery implements DSLQuery {
+    public final String NESTED = "nested";
+
     private String path;
     private Score_mode scoreMode;
     private DSLQuery subQuery;

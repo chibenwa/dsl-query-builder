@@ -26,14 +26,8 @@ import com.google.gson.JsonObject;
  * The basic operation is to get it as a JSON.
  */
 public interface DSLQuery {
-    public final String MATCH_ALL = "match_all";
-    public final String MUST = "must";
-    public final String SHOULD = "should";
-    public final String MUST_NOT = "must_not";
-    public final String NESTED = "nested";
     public final String SCORE_MODE = "score_mode";
     public final String PATH = "path";
-    public final String BOOL = "bool";
     public final String AVG = "avg";
     public final String SUM = "sum";
     public final String MAX = "max";
