@@ -97,4 +97,28 @@ public class DSLQueriesTest {
         DSLQuery query = new DSLDisMaxQuery().addQuery(new DSLMatchAllQuery()).addQuery(new DSLMatchQuery("toto", "tata")).setTieBreaker(0.3).setBoost(0.2);
         assertEquals("{\"dis_max\":{\"boost\":0.2,\"tie_breaker\":0.3,\"queries\":[{\"match_all\":{}},{\"match\":{\"toto\":\"tata\"}}]}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void fltTest() {
+        DSLQuery query = new DSLFuzzyLikeThisQuery("This is a text")
+                .addField("Summary")
+                .addField("description")
+                .setBoost(0.2)
+                .setAnalyser("analyser")
+                .setIgnore_tf(true)
+                .setPrefixLength(2)
+                .setFuzziness(2);
+        assertEquals("{\"flt\":{\"fields\":[\"Summary\",\"description\"],\"like_text\":\"This is a text\",\"ignore_tf\":true,\"prefix_length\":2,\"analyzer\":\"analyser\",\"fuzziness\":2,\"boost\":0.2}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void flt_fieldTest() {
+        DSLQuery query = new DSLFuzzyLikeThisFieldQuery("I like icecreams", "ad")
+                .setBoost(0.2)
+                .setAnalyser("analyser")
+                .setIgnore_tf(true)
+                .setPrefixLength(2)
+                .setFuzziness(2);
+        assertEquals("{\"flt_field\":{\"ad\":{\"like_text\":\"I like icecreams\",\"ignore_tf\":true,\"prefix_length\":2,\"analyzer\":\"analyser\",\"fuzziness\":2,\"boost\":0.2}}}", query.getQueryAsJson().toString());
+    }
 }
