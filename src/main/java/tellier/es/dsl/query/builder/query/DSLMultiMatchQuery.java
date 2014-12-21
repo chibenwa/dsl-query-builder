@@ -20,7 +20,6 @@ public class DSLMultiMatchQuery implements DSLQuery{
     public final String CROSS_FIELDS = "cross_fields";
     public final String PHRASE = "phrase";
     public final String PHRASE_PREFIX = "phrase_prefix";
-    public final String TIE_BREAKER = "tie_breaker";
     public final String USE_DIS_MAX = "use_dis_max";
     public final String MULTI_MATCH = "multi_match";
     public final String FIELDS = "fields";
@@ -29,7 +28,6 @@ public class DSLMultiMatchQuery implements DSLQuery{
     private List<String> fields;
     private boolean use_dis_max;
     private DSLMultiMatchQuery.Type type;
-    private Double tie_breaker;
     private MatchUtilities matchUtilities;
 
     enum Type {
@@ -59,7 +57,7 @@ public class DSLMultiMatchQuery implements DSLQuery{
     }
 
     public DSLMultiMatchQuery setTieBreaker(Double tie_breaker) {
-        this.tie_breaker = tie_breaker;
+        matchUtilities.setTieBraker(tie_breaker);
         return this;
     }
 
@@ -89,9 +87,6 @@ public class DSLMultiMatchQuery implements DSLQuery{
             case PHRASE_PREFIX:
                 multiMatchObject.add(TYPE, new JsonPrimitive(PHRASE_PREFIX));
                 break;
-        }
-        if(tie_breaker != null) {
-            multiMatchObject.add(TIE_BREAKER, new JsonPrimitive(tie_breaker));
         }
         if(!use_dis_max) {
             multiMatchObject.add(USE_DIS_MAX, new JsonPrimitive(false));

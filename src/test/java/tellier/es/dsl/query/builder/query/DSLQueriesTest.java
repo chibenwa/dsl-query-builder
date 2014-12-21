@@ -91,4 +91,10 @@ public class DSLQueriesTest {
                 .setAnalyzer("my_analyser");
         assertEquals("{\"common\":{\"body\":{\"query\":\"to be or not to be\",\"minimum_should_match\":{\"low_freq\":\"2\",\"high_freq\":\"3\"},\"analyzer\":\"my_analyser\",\"high_freq_operator\":\"and\"}}}", dslQuery.getQueryAsJson().toString());
     }
+
+    @Test
+    public void disMaxTest() {
+        DSLQuery query = new DSLDisMaxQuery().addQuery(new DSLMatchAllQuery()).addQuery(new DSLMatchQuery("toto", "tata")).setTieBreaker(0.3).setBoost(0.2);
+        assertEquals("{\"dis_max\":{\"boost\":0.2,\"tie_breaker\":0.3,\"queries\":[{\"match_all\":{}},{\"match\":{\"toto\":\"tata\"}}]}}", query.getQueryAsJson().toString());
+    }
 }

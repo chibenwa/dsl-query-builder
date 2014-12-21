@@ -17,6 +17,8 @@ public class MatchUtilities {
     public final String ZERO_TERMS_QUERY = "zero_terms_query";
     public final String ALL = "all";
     public final String FUZZINESS = "fuzziness";
+    public final String BOOST = "boost";
+    public final String TIE_BREAKER = "tie_breaker";
 
     private String analyser;
     private Double cutoff_frequency;
@@ -26,6 +28,8 @@ public class MatchUtilities {
     private Long max_expansions;
     private Zero_Terms_Query zero_terms_query;
     private DSLMinimumShouldMatch minimumShouldMatchObject;
+    private Double boost;
+    private Double tieBraker;
 
 
     public MatchUtilities() {
@@ -99,8 +103,16 @@ public class MatchUtilities {
         this.zero_terms_query = zero_terms_query;
     }
 
+    public void setBoost(Double boost) {
+        this.boost = boost;
+    }
+
+    public void setTieBraker(Double tieBraker) {
+        this.tieBraker = tieBraker;
+    }
+
     public boolean isEmpty() {
-        return (analyser == null && max_expansions == null && cutoff_frequency == null && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null && minimumShouldMatchObject == null );
+        return (analyser == null && max_expansions == null && cutoff_frequency == null && operator == Operator.OR && minimumShouldMatch == null && zero_terms_query == Zero_Terms_Query.NONE && fuzziness == null && minimumShouldMatchObject == null && boost == null && tieBraker == null );
     }
 
     public void setMinimumShouldMatch(DSLMinimumShouldMatch dslMinimumShouldMatchObject) {
@@ -132,6 +144,12 @@ public class MatchUtilities {
         }
         if(max_expansions != null) {
             queryJson.add(MAX_EXPANSIONS, new JsonPrimitive(max_expansions));
+        }
+        if(boost != null) {
+            queryJson.add(BOOST, new JsonPrimitive(boost));
+        }
+        if(tieBraker != null) {
+            queryJson.add(TIE_BREAKER, new JsonPrimitive(tieBraker));
         }
     }
 }
