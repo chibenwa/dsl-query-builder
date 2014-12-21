@@ -121,4 +121,10 @@ public class DSLQueriesTest {
                 .setFuzziness(2);
         assertEquals("{\"flt_field\":{\"ad\":{\"like_text\":\"I like icecreams\",\"ignore_tf\":true,\"prefix_length\":2,\"analyzer\":\"analyser\",\"fuzziness\":2,\"boost\":0.2}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void fuzzyTest() {
+        DSLQuery query = new DSLFuzzyQuery("user", "ki").setFuzziness(2).setBoost(1.0).setPrefix_length(0).setMax_expansions(100);
+        assertEquals("{\"fuzzy\":{\"user\":{\"value\":\"ki\",\"prefix_length\":0,\"fuzziness\":2,\"boost\":1.0,\"max_expansions\":100}}}", query.getQueryAsJson().toString());
+    }
 }
