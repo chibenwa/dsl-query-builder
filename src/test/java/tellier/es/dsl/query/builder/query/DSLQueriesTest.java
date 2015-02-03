@@ -2,6 +2,7 @@ package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
+import tellier.es.dsl.query.builder.Utilities.DSLPoint;
 import tellier.es.dsl.query.builder.filter.DSLExistFilter;
 import tellier.es.dsl.query.builder.filter.DSLFilter;
 
@@ -127,4 +128,35 @@ public class DSLQueriesTest {
         DSLQuery query = new DSLFuzzyQuery("user", "ki").setFuzziness(2).setBoost(1.0).setPrefix_length(0).setMax_expansions(100);
         assertEquals("{\"fuzzy\":{\"user\":{\"value\":\"ki\",\"prefix_length\":0,\"fuzziness\":2,\"boost\":1.0,\"max_expansions\":100}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void geoShapeTest() {
+        DSLGeoShapeQuery query = new DSLGeoShapeQuery("envelope").addPoint(new DSLPoint(13d, 53d)).addPoint(new DSLPoint(14d, 52d));
+        assertEquals("{\"geo_shape\":{\"location\":{\"shape\":{\"type\":\"envelope\",\"coordinates\":[[13.0,53.0],[14.0,52.0]]}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void hasChildTest() {
+        DSLHasChildQuery query = new DSLHasChildQuery("clients", new DSLMatchQuery("name", "benwa"));
+        assertEquals("{\"has_child\":{\"type\":\"clients\",\"query\":{\"match\":{\"name\":\"benwa\"}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void hasChildWithScoreModeTest() {
+        DSLHasChildQuery query = new DSLHasChildQuery("clients", new DSLMatchQuery("name", "benwa")).setScoreMode(DSLHasChildQuery.ScoreMode.AVG);
+        assertEquals("{\"has_child\":{\"type\":\"clients\",\"score_mode\":\"avg\",\"query\":{\"match\":{\"name\":\"benwa\"}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void hasParentTest() {
+        DSLHasParentQuery query = new DSLHasParentQuery("clients", new DSLMatchQuery("field", "toto"));
+        assertEquals("{\"has_parent\":{\"parent_type\":\"clients\",\"query\":{\"match\":{\"field\":\"toto\"}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void hasParentWithScoreModeTest() {
+        DSLHasParentQuery query = new DSLHasParentQuery("clients", new DSLMatchQuery("field", "toto")).setScoreMode(DSLHasParentQuery.ScoreMode.SCORE);
+        assertEquals("{\"has_parent\":{\"parent_type\":\"clients\",\"query\":{\"match\":{\"field\":\"toto\"}},\"score_mode\":\"score\"}}", query.getQueryAsJson().toString());
+    }
+
 }
