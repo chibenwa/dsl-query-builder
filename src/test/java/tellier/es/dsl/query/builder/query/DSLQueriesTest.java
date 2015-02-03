@@ -159,4 +159,10 @@ public class DSLQueriesTest {
         assertEquals("{\"has_parent\":{\"parent_type\":\"clients\",\"query\":{\"match\":{\"field\":\"toto\"}},\"score_mode\":\"score\"}}", query.getQueryAsJson().toString());
     }
 
+    @Test
+    public void IdsTest() {
+        DSLIdsQuery query = new DSLIdsQuery("my_type").addValue("1").addValue("4").addValue("100");
+        assertEquals("{\"ids\":{\"type\":\"my_type\",\"values\":[\"1\",\"4\",\"100\"]}}", query.getQueryAsJson().toString());
+    }
+
 }
