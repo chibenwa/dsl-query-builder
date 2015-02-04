@@ -29,7 +29,7 @@ import java.util.List;
  *
  * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
  */
-public class DSLRegexQuery implements DSLQuery {
+public class DSLRegexpQuery implements DSLQuery {
 
     private final static String REGEXP = "regexp";
     private final static String VALUE = "value";
@@ -61,17 +61,17 @@ public class DSLRegexQuery implements DSLQuery {
         }
     }
 
-    public DSLRegexQuery(String field, String regexp) {
+    public DSLRegexpQuery(String field, String regexp) {
         this.field = field;
         this.regexp = regexp;
     }
 
-    public DSLRegexQuery addFlag(Flag flag) {
+    public DSLRegexpQuery addFlag(Flag flag) {
         flags.add(flag);
         return this;
     }
 
-    public DSLRegexQuery setBoost(Double boost) {
+    public DSLRegexpQuery setBoost(Double boost) {
         this.boost = boost;
         return this;
     }
