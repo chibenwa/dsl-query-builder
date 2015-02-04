@@ -187,4 +187,13 @@ public class DSLQueriesTest {
         assertEquals("{\"mlt\":{\"fields\":[\"field\",\"toto\"],\"docs\":[{\"_index\":\"index\",\"_type\":\"type\",\"_id\":\"id\"},{\"_index\":\"index2\",\"_type\":\"type2\",\"_id\":\"id2\"}],\"exclude\":true,\"like_text\":\"This text should be like this one\",\"percent_terms_to_match\":0.25,\"min_term_freq\":4,\"max_query_terms\":10,\"stop_words\":[\"a\",\"the\",\"is\"],\"min_doc_freq\":2,\"max_doc_freq\":100,\"min_word_length\":3,\"max_word_length\":200,\"boost_terms\":5,\"analyzer\":\"my_analyser\",\"boost\":0.2}}", query.getQueryAsJson().toString());
     }
 
+    @Test
+    public void moreLikeThisFieldTest() {
+        DSLMoreLikeThisFieldQuery query = new DSLMoreLikeThisFieldQuery("user.name").setMaxQueryTerms(10).setBoostTerms(11)
+                .setLikeText("This text should be like this one").addStopWord("a").addStopWord("the").addStopWord("is")
+                .setMaxDocFreq(100).setMinDocFreq(2).setMinTermFreq(4).setMinWordLength(3).setMaxWordLength(200)
+                .setPercentTermsToMatch(0.25).setAnalyser("my_analyser").setBoostTerms(5).setBoost(0.2);
+        assertEquals("{\"mlt_field\":{\"user.name\":{\"like_text\":\"This text should be like this one\",\"percent_terms_to_match\":0.25,\"min_term_freq\":4,\"max_query_terms\":10,\"stop_words\":[\"a\",\"the\",\"is\"],\"min_doc_freq\":2,\"max_doc_freq\":100,\"min_word_length\":3,\"max_word_length\":200,\"boost_terms\":5,\"analyzer\":\"my_analyser\",\"boost\":0.2}}}", query.getQueryAsJson().toString());
+    }
+
 }
