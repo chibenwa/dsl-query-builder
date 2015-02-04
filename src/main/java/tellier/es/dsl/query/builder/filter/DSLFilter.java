@@ -31,11 +31,6 @@ public interface DSLFilter {
     public final String NOT = "not";
     public final String TERM = "term";
     public final String CACHE = "_cache";
-    public final String GTE = "gte";
-    public final String LTE = "lte";
-    public final String GT = "gt";
-    public final String LT = "lt";
-    public final String RANGE = "range";
     public final String NESTED = "nested";
     public final String PATH = "path";
     public final String FILTER = "filter";

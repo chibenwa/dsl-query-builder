@@ -16,59 +16,73 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.filter;
+package tellier.es.dsl.query.builder.query;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import tellier.es.dsl.query.builder.Utilities.DSLRange;
 
 /**
- * Represents a RangeFilter
+ * Represents a Range Query
+ *
+ * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-range-query.html
  */
-public class DSLRangeFilter implements DSLFilter{
-    private DSLRange dslRange;
+public class DSLRangeQuery {
 
-    public DSLRangeFilter(String field) {
+    private DSLRange dslRange;
+    private static final String BOOST = "boost";
+    private Double boost;
+
+    public DSLRangeQuery(String field) {
         dslRange = new DSLRange(field);
     }
 
-    public DSLRangeFilter gte(Number value) {
+    public DSLRangeQuery gte(Number value) {
         dslRange.gte(value);
         return this;
     }
 
-    public DSLRangeFilter lte(Number value) {
+    public DSLRangeQuery lte(Number value) {
         dslRange.lte(value);
         return this;
     }
 
-    public DSLRangeFilter gt(Number value) {
+    public DSLRangeQuery gt(Number value) {
         dslRange.gt(value);
         return this;
     }
 
-    public DSLRangeFilter lt(Number value) {
+    public DSLRangeQuery lt(Number value) {
         dslRange.lt(value);
         return this;
     }
 
-    public DSLRangeFilter gte(String string) {
+    public DSLRangeQuery gte(String string) {
         dslRange.gte(string);
         return this;
     }
 
-    public DSLRangeFilter lte(String string) {
+    public DSLRangeQuery lte(String string) {
         dslRange.lte(string);
         return this;
     }
 
-    public DSLRangeFilter gt(String string) {
+    public DSLRangeQuery gt(String string) {
         dslRange.gt(string);
         return this;
     }
 
-    public DSLRangeFilter lt(String string) {
+    public DSLRangeQuery lt(String string) {
         dslRange.lt(string);
+        return this;
+    }
+
+    public DSLRangeQuery setBoost(Double boost) {
+        dslRange.setBoost(boost);
+        return this;
+    }
+
+    public DSLRangeQuery setTimeZone(String timeZone) {
+        dslRange.setTimeZone(timeZone);
         return this;
     }
 
