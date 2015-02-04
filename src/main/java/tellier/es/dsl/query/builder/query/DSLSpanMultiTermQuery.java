@@ -19,44 +19,28 @@
 package tellier.es.dsl.query.builder.query;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
- * Represents a Prefix query
+ * Represents a Span Multi Term Query
  *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-prefix-query.html
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-span-multi-term-query.html
  */
-public class DSLPrefixQuery implements DSLMultiTermQuery {
+public class DSLSpanMultiTermQuery implements DSLSpanQuery {
 
-    private static final String PREFIX = "prefix";
-    private static final String BOOST = "boost";
+    private final static String SPAN_MULTI = "span_multi";
+    private final static String MATCH = "match";
 
-    private String field;
-    private Double boost;
-    private String prefix;
+    private DSLMultiTermQuery multiTermQuery;
 
-    public DSLPrefixQuery(String field, String prefix) {
-        this.field = field;
-        this.prefix = prefix;
-    }
-
-    public DSLPrefixQuery setBoost(Double boost) {
-        this.boost = boost;
-        return this;
+    public DSLSpanMultiTermQuery(DSLMultiTermQuery multiTermQuery) {
+        this.multiTermQuery = multiTermQuery;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject prefixObject = new JsonObject();
-        result.add(PREFIX, prefixObject);
-        if( boost == null) {
-            prefixObject.add(field, new JsonPrimitive(prefix));
-        } else {
-            JsonObject innerPreficObject = new JsonObject();
-            innerPreficObject.add(PREFIX, new JsonPrimitive(prefix));
-            innerPreficObject.add(BOOST, new JsonPrimitive(boost));
-            prefixObject.add(field, innerPreficObject);
-        }
+        JsonObject spanMultiObject = new JsonObject();
+        result.add(SPAN_MULTI, spanMultiObject);
+        spanMultiObject.add(MATCH, multiTermQuery.getQueryAsJson());
         return result;
     }
 

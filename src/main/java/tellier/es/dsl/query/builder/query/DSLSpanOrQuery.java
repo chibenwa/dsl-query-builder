@@ -18,46 +18,40 @@
  ****************************************************************/
 package tellier.es.dsl.query.builder.query;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Represents a Prefix query
- *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-prefix-query.html
+ * Represents a Span Or query
  */
-public class DSLPrefixQuery implements DSLMultiTermQuery {
+public class DSLSpanOrQuery implements DSLSpanQuery {
 
-    private static final String PREFIX = "prefix";
-    private static final String BOOST = "boost";
+    private static final String SPAN_OR = "span_or";
+    private static final String CLAUSES = "clauses";
 
-    private String field;
-    private Double boost;
-    private String prefix;
+    private List<DSLSpanQuery> clauses = new ArrayList<DSLSpanQuery>();
 
-    public DSLPrefixQuery(String field, String prefix) {
-        this.field = field;
-        this.prefix = prefix;
+    public DSLSpanOrQuery addClause(DSLSpanQuery clause) {
+        clauses.add(clause);
+        return this;
     }
 
-    public DSLPrefixQuery setBoost(Double boost) {
-        this.boost = boost;
-        return this;
+    private JsonArray getClausesArray() {
+        JsonArray clausesArray = new JsonArray();
+        for(DSLSpanQuery clause : clauses) {
+            clausesArray.add(clause.getQueryAsJson());
+        }
+        return clausesArray;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject prefixObject = new JsonObject();
-        result.add(PREFIX, prefixObject);
-        if( boost == null) {
-            prefixObject.add(field, new JsonPrimitive(prefix));
-        } else {
-            JsonObject innerPreficObject = new JsonObject();
-            innerPreficObject.add(PREFIX, new JsonPrimitive(prefix));
-            innerPreficObject.add(BOOST, new JsonPrimitive(boost));
-            prefixObject.add(field, innerPreficObject);
-        }
+        JsonObject spanOrObject = new JsonObject();
+        result.add(SPAN_OR, spanOrObject);
+        spanOrObject.add(CLAUSES, getClausesArray());
         return result;
     }
-
 }

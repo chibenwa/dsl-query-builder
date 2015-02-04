@@ -22,42 +22,42 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Represents a Prefix query
+ * DSL span term query
  *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-prefix-query.html
+ * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-span-term-query.html
  */
-public class DSLPrefixQuery implements DSLMultiTermQuery {
+public class DSLSpanTermQuery implements DSLSpanQuery {
 
-    private static final String PREFIX = "prefix";
+    private static final String SPAN_TERM = "span-term";
     private static final String BOOST = "boost";
+    private static final String VALUE = "value";
 
     private String field;
+    private String value;
     private Double boost;
-    private String prefix;
 
-    public DSLPrefixQuery(String field, String prefix) {
+    public DSLSpanTermQuery(String field, String value) {
         this.field = field;
-        this.prefix = prefix;
+        this.value = value;
     }
 
-    public DSLPrefixQuery setBoost(Double boost) {
+    public DSLSpanTermQuery setBoost(Double boost) {
         this.boost = boost;
         return this;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject prefixObject = new JsonObject();
-        result.add(PREFIX, prefixObject);
-        if( boost == null) {
-            prefixObject.add(field, new JsonPrimitive(prefix));
+        JsonObject spanTermObject = new JsonObject();
+        result.add(SPAN_TERM, spanTermObject);
+        if(boost != null) {
+            JsonObject fieldObject = new JsonObject();
+            fieldObject.add(VALUE, new JsonPrimitive(value));
+            fieldObject.add(BOOST, new JsonPrimitive(boost));
+            spanTermObject.add(field, fieldObject);
         } else {
-            JsonObject innerPreficObject = new JsonObject();
-            innerPreficObject.add(PREFIX, new JsonPrimitive(prefix));
-            innerPreficObject.add(BOOST, new JsonPrimitive(boost));
-            prefixObject.add(field, innerPreficObject);
+            spanTermObject.add(field, new JsonPrimitive(value));
         }
         return result;
     }
-
 }

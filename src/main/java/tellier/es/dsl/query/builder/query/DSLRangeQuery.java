@@ -26,7 +26,7 @@ import tellier.es.dsl.query.builder.Utilities.DSLRange;
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-range-query.html
  */
-public class DSLRangeQuery {
+public class DSLRangeQuery implements DSLMultiTermQuery {
 
     private DSLRange dslRange;
     private static final String BOOST = "boost";

@@ -19,44 +19,32 @@
 package tellier.es.dsl.query.builder.query;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
- * Represents a Prefix query
+ * Represents Span Not query
  *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-prefix-query.html
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-span-not-query.html
  */
-public class DSLPrefixQuery implements DSLMultiTermQuery {
+public class DSLSpanNotQuery implements DSLSpanQuery {
 
-    private static final String PREFIX = "prefix";
-    private static final String BOOST = "boost";
+    private static final String SPAN_NOT = "span_not";
+    private static final String INCLUDE = "include";
+    private static final String EXCLUDE = "exclude";
 
-    private String field;
-    private Double boost;
-    private String prefix;
+    private DSLSpanQuery includeSpanQuery;
+    private DSLSpanQuery excludeSpanQuery;
 
-    public DSLPrefixQuery(String field, String prefix) {
-        this.field = field;
-        this.prefix = prefix;
-    }
-
-    public DSLPrefixQuery setBoost(Double boost) {
-        this.boost = boost;
-        return this;
+    public DSLSpanNotQuery(DSLSpanQuery includeSpanQuery, DSLSpanQuery excludeSpanQuery) {
+        this.includeSpanQuery = includeSpanQuery;
+        this.excludeSpanQuery = excludeSpanQuery;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject prefixObject = new JsonObject();
-        result.add(PREFIX, prefixObject);
-        if( boost == null) {
-            prefixObject.add(field, new JsonPrimitive(prefix));
-        } else {
-            JsonObject innerPreficObject = new JsonObject();
-            innerPreficObject.add(PREFIX, new JsonPrimitive(prefix));
-            innerPreficObject.add(BOOST, new JsonPrimitive(boost));
-            prefixObject.add(field, innerPreficObject);
-        }
+        JsonObject spanNotObject = new JsonObject();
+        result.add(SPAN_NOT, spanNotObject);
+        spanNotObject.add(INCLUDE, includeSpanQuery.getQueryAsJson());
+        spanNotObject.add(EXCLUDE, excludeSpanQuery.getQueryAsJson());
         return result;
     }
 

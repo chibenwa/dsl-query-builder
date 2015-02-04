@@ -1,6 +1,5 @@
 package tellier.es.dsl.query.builder.query;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import tellier.es.dsl.query.builder.Utilities.FuzzyQueriesUtilities;
@@ -11,7 +10,7 @@ import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
  *
  * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-fuzzy-query.html
  */
-public class DSLFuzzyQuery implements DSLQuery {
+public class DSLFuzzyQuery implements DSLMultiTermQuery {
 
     public final String FUZZY = "fuzzy";
     public final String VALUE = "value";

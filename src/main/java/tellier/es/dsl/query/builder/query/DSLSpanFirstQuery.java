@@ -22,42 +22,28 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Represents a Prefix query
- *
- * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-prefix-query.html
+ * Represents a Span First query
  */
-public class DSLPrefixQuery implements DSLMultiTermQuery {
+public class DSLSpanFirstQuery implements DSLSpanQuery {
 
-    private static final String PREFIX = "prefix";
-    private static final String BOOST = "boost";
+    private static final String SPAN_FIRST = "span_first";
+    private static final String MATCH = "match";
+    private static final String END = "end";
 
-    private String field;
-    private Double boost;
-    private String prefix;
+    private DSLSpanQuery spanQuery;
+    private Integer end;
 
-    public DSLPrefixQuery(String field, String prefix) {
-        this.field = field;
-        this.prefix = prefix;
-    }
-
-    public DSLPrefixQuery setBoost(Double boost) {
-        this.boost = boost;
-        return this;
+    public DSLSpanFirstQuery(DSLSpanQuery spanQuery, Integer end) {
+        this.spanQuery = spanQuery;
+        this.end = end;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject prefixObject = new JsonObject();
-        result.add(PREFIX, prefixObject);
-        if( boost == null) {
-            prefixObject.add(field, new JsonPrimitive(prefix));
-        } else {
-            JsonObject innerPreficObject = new JsonObject();
-            innerPreficObject.add(PREFIX, new JsonPrimitive(prefix));
-            innerPreficObject.add(BOOST, new JsonPrimitive(boost));
-            prefixObject.add(field, innerPreficObject);
-        }
+        JsonObject spanFirstObject = new JsonObject();
+        result.add(SPAN_FIRST, spanFirstObject);
+        spanFirstObject.add(MATCH, spanQuery.getQueryAsJson());
+        spanFirstObject.add(END, new JsonPrimitive(end));
         return result;
     }
-
 }
