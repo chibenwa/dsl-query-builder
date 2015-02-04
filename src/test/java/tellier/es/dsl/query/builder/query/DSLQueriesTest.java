@@ -165,4 +165,16 @@ public class DSLQueriesTest {
         assertEquals("{\"ids\":{\"type\":\"my_type\",\"values\":[\"1\",\"4\",\"100\"]}}", query.getQueryAsJson().toString());
     }
 
+    @Test
+    public void IndicesTest() {
+        DSLIndicesQuery query = new DSLIndicesQuery(new DSLMatchAllQuery()).addIndice("indice1").addIndice("indice2");
+        assertEquals("{\"indices\":{\"indices\":[\"indice1\",\"indice2\"],\"query\":{\"match_all\":{}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void IndicesWithNoMatchTest() {
+        DSLIndicesQuery query = new DSLIndicesQuery(new DSLMatchAllQuery()).addIndice("indice1").addIndice("indice2").setNoMatchQuery(new DSLMatchQuery("tag", "kow"));
+        assertEquals("{\"indices\":{\"indices\":[\"indice1\",\"indice2\"],\"query\":{\"match_all\":{}},\"no_match_query\":{\"match\":{\"tag\":\"kow\"}}}}", query.getQueryAsJson().toString());
+    }
+
 }
