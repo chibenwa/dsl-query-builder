@@ -163,6 +163,4 @@ public class DSLMoreLikeThisQuery implements DSLQuery {
         return this;
     }
 
-
-
 }
