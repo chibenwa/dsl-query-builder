@@ -196,4 +196,15 @@ public class DSLQueriesTest {
         assertEquals("{\"mlt_field\":{\"user.name\":{\"like_text\":\"This text should be like this one\",\"percent_terms_to_match\":0.25,\"min_term_freq\":4,\"max_query_terms\":10,\"stop_words\":[\"a\",\"the\",\"is\"],\"min_doc_freq\":2,\"max_doc_freq\":100,\"min_word_length\":3,\"max_word_length\":200,\"boost_terms\":5,\"analyzer\":\"my_analyser\",\"boost\":0.2}}}", query.getQueryAsJson().toString());
     }
 
+    @Test
+    public void prefixTest() {
+        DSLPrefixQuery query = new DSLPrefixQuery("user", "ben");
+        assertEquals("{\"prefix\":{\"user\":\"ben\"}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void prefixWithBoostTest() {
+        DSLPrefixQuery query = new DSLPrefixQuery("user", "ben").setBoost(0.45);
+        assertEquals("{\"prefix\":{\"user\":{\"prefix\":\"ben\",\"boost\":0.45}}}", query.getQueryAsJson().toString());
+    }
 }
