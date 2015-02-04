@@ -207,4 +207,23 @@ public class DSLQueriesTest {
         DSLPrefixQuery query = new DSLPrefixQuery("user", "ben").setBoost(0.45);
         assertEquals("{\"prefix\":{\"user\":{\"prefix\":\"ben\",\"boost\":0.45}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void rangeTest() {
+        DSLRangeQuery query = new DSLRangeQuery("born").gte("2012-01-01").lte("now").setTimeZone("+1:00");
+        assertEquals("{\"range\":{\"born\":{\"gte\":\"2012-01-01\",\"lte\":\"now\",\"time_zone\":\"+1:00\"}}}", query.getQueryAsJson().toString());
+        query = new DSLRangeQuery("age").gte(10).lte(20).setBoost(2.0);
+        assertEquals("{\"range\":{\"age\":{\"gte\":10,\"lte\":20,\"boost\":2.0}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void regexpTest() {
+        DSLRegexpQuery query = new DSLRegexpQuery("name.first", "s.*y");
+        assertEquals("{\"regexp\":{\"name.first\":\"s.*y\"}}", query.getQueryAsJson().toString());
+        query.setBoost(1.2);
+        assertEquals("{\"regexp\":{\"name.first\":{\"value\":\"s.*y\",\"boost\":1.2}}}", query.getQueryAsJson().toString());
+        query = new DSLRegexpQuery("name.first", "s.*y").addFlag(DSLRegexpQuery.Flag.INTERSECTION).addFlag(DSLRegexpQuery.Flag.COMPLEMENT)
+                .addFlag(DSLRegexpQuery.Flag.EMPTY);
+        assertEquals("{\"regexp\":{\"name.first\":{\"value\":\"s.*y\",\"flags\":\"INTERSECTION|COMPLEMENT|EMPTY\"}}}", query.getQueryAsJson().toString());
+    }
 }
