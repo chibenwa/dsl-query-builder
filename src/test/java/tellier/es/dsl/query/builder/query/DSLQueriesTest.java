@@ -1,6 +1,7 @@
 package tellier.es.dsl.query.builder.query;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.DSLDoc;
 import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
 import tellier.es.dsl.query.builder.Utilities.DSLPoint;
 import tellier.es.dsl.query.builder.filter.DSLExistFilter;
@@ -175,6 +176,15 @@ public class DSLQueriesTest {
     public void IndicesWithNoMatchTest() {
         DSLIndicesQuery query = new DSLIndicesQuery(new DSLMatchAllQuery()).addIndice("indice1").addIndice("indice2").setNoMatchQuery(new DSLMatchQuery("tag", "kow"));
         assertEquals("{\"indices\":{\"indices\":[\"indice1\",\"indice2\"],\"query\":{\"match_all\":{}},\"no_match_query\":{\"match\":{\"tag\":\"kow\"}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void moreLikeThisQueryTest() {
+        DSLMoreLikeThisQuery query = new DSLMoreLikeThisQuery().addDoc(new DSLDoc("index", "type", "id")).addDoc(new DSLDoc("index2", "type2", "id2"))
+                .addField("field").addField("toto").setMaxQueryTerms(10).setBoostTerms(11).setExclude(true).setLikeText("This text should be like this one")
+                .addStopWord("a").addStopWord("the").addStopWord("is").setMaxDocFreq(100).setMinDocFreq(2).setMinTermFreq(4).setMinWordLength(3).setMaxWordLength(200)
+                .setPercentTermsToMatch(0.25).setAnalyser("my_analyser").setBoostTerms(5).setBoost(0.2);
+        assertEquals("{\"mlt\":{\"fields\":[\"field\",\"toto\"],\"docs\":[{\"_index\":\"index\",\"_type\":\"type\",\"_id\":\"id\"},{\"_index\":\"index2\",\"_type\":\"type2\",\"_id\":\"id2\"}],\"exclude\":true,\"like_text\":\"This text should be like this one\",\"percent_terms_to_match\":0.25,\"min_term_freq\":4,\"max_query_terms\":10,\"stop_words\":[\"a\",\"the\",\"is\"],\"min_doc_freq\":2,\"max_doc_freq\":100,\"min_word_length\":3,\"max_word_length\":200,\"boost_terms\":5,\"analyzer\":\"my_analyser\",\"boost\":0.2}}", query.getQueryAsJson().toString());
     }
 
 }
