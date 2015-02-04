@@ -226,4 +226,48 @@ public class DSLQueriesTest {
                 .addFlag(DSLRegexpQuery.Flag.EMPTY);
         assertEquals("{\"regexp\":{\"name.first\":{\"value\":\"s.*y\",\"flags\":\"INTERSECTION|COMPLEMENT|EMPTY\"}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void spanTermTest() {
+        DSLSpanTermQuery query = new DSLSpanTermQuery("user", "kimchy");
+        assertEquals("{\"span-term\":{\"user\":\"kimchy\"}}", query.getQueryAsJson().toString());
+        query.setBoost(2.0);
+        assertEquals("{\"span-term\":{\"user\":{\"value\":\"kimchy\",\"boost\":2.0}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void spanFirstTest() {
+        DSLSpanFirstQuery query = new DSLSpanFirstQuery(new DSLSpanTermQuery("user", "kimchy"), 3);
+        assertEquals("{\"span_first\":{\"match\":{\"span-term\":{\"user\":\"kimchy\"}},\"end\":3}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void spanNearTest() {
+        DSLSpanNearQuery query = new DSLSpanNearQuery().addClause(new DSLSpanTermQuery("field", "value1"))
+                .addClause(new DSLSpanTermQuery("field", "value2")).addClause(new DSLSpanTermQuery("field", "value3"))
+                .setSlop(12).setInOrder(false).setCollectPayloads(false);
+        assertEquals("{\"span_near\":{\"clauses\":[{\"span-term\":{\"field\":\"value1\"}},{\"span-term\":{\"field\":\"value2\"}},{\"span-term\":{\"field\":\"value3\"}}],\"slop\":12,\"in_order\":false,\"collect_payloads\":false}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void spanNotTest() {
+        DSLSpanNotQuery query = new DSLSpanNotQuery(new DSLSpanTermQuery("field1","hoya"),
+                new DSLSpanNearQuery().addClause(new DSLSpanTermQuery("field1", "la"))
+                        .addClause(new DSLSpanTermQuery("field1", "hoya")).setSlop(0).setInOrder(true)
+        );
+        assertEquals("{\"span_not\":{\"include\":{\"span-term\":{\"field1\":\"hoya\"}},\"exclude\":{\"span_near\":{\"clauses\":[{\"span-term\":{\"field1\":\"la\"}},{\"span-term\":{\"field1\":\"hoya\"}}],\"slop\":0,\"in_order\":true}}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void spanOrTest() {
+        DSLSpanOrQuery query = new DSLSpanOrQuery().addClause(new DSLSpanTermQuery("field", "value1"))
+                .addClause(new DSLSpanTermQuery("field", "value2")).addClause(new DSLSpanTermQuery("field", "value3"));
+        assertEquals("{\"span_or\":{\"clauses\":[{\"span-term\":{\"field\":\"value1\"}},{\"span-term\":{\"field\":\"value2\"}},{\"span-term\":{\"field\":\"value3\"}}]}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void spanMultiTermTest() {
+        DSLSpanMultiTermQuery query = new DSLSpanMultiTermQuery(new DSLPrefixQuery("user", "ki").setBoost(1.08));
+        assertEquals("{\"span_multi\":{\"match\":{\"prefix\":{\"user\":{\"prefix\":\"ki\",\"boost\":1.08}}}}}", query.getQueryAsJson().toString());
+    }
 }
