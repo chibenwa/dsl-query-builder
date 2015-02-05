@@ -278,4 +278,38 @@ public class DSLQueriesTest {
         query.setBoost(2.0);
         assertEquals("{\"term\":{\"user\":{\"term\":\"kimchy\",\"boost\":2.0}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void termsTest() {
+        DSLTermsQuery query = new DSLTermsQuery("tags", 1).addTerm("blue").addTerm("pill");
+        assertEquals("{\"terms\":{\"tags\":[\"blue\",\"pill\"],\"minimum_should_match\":1}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void topChildrenTest() {
+        DSLTopChildrenQuery query = new DSLTopChildrenQuery("blog_tag", new DSLTermQuery("tag", "something"))
+                .setScore(DSLTopChildrenQuery.Score.MAX).setFactor(5).setIncrementalFactor(2);
+        assertEquals("{\"top_children\":{\"type\":\"blog_tag\",\"query\":{\"term\":{\"tag\":\"something\"}},\"score\":\"max\",\"factor\":5,\"incremental_factor\":2}}", query.getQueryAsJson().toString());
+        query.setScope("my_scope");
+        assertEquals("{\"top_children\":{\"type\":\"blog_tag\",\"query\":{\"term\":{\"tag\":\"something\"}},\"_scope\":\"my_scope\",\"score\":\"max\",\"factor\":5,\"incremental_factor\":2}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void wildcardTest() {
+        DSLWildcardQuery query = new DSLWildcardQuery("user", "ki*y");
+        assertEquals("{\"wildcard\":{\"user\":\"ki*y\"}}", query.getQueryAsJson().toString());
+        query.setBoost(2.0);
+        assertEquals("{\"wildcard\":{\"user\":{\"wildcard\":\"ki*y\",\"boost\":2.0}}}", query.getQueryAsJson().toString());
+    }
+
+    @Test
+    public void templateTest() {
+        DSLTemplateQuery query = new DSLTemplateQuery().setSubQuery(new DSLMatchQuery("text", "{query_string}")).addParam("query_string", "all about search");
+        assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"query\":{\"match\":{\"text\":\"{query_string}\"}}}}", query.getQueryAsJson().toString());
+        query = new DSLTemplateQuery().setFile("my_template").addParam("query_string", "all about search");
+        assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"file\":\"my_template\"}}", query.getQueryAsJson().toString());
+        query = new DSLTemplateQuery().setId("my_template").addParam("query_string", "all about search");
+        assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"id\":\"my_template\"}}", query.getQueryAsJson().toString());
+    }
+
 }
