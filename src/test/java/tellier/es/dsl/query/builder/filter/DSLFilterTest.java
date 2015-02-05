@@ -1,6 +1,8 @@
 package tellier.es.dsl.query.builder.filter;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
+import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
 
 import static org.junit.Assert.assertEquals;
 
@@ -139,4 +141,21 @@ public class DSLFilterTest {
         DSLFilter dslFilter = new DSLExistFilter("user").setNullValue("@_@");
         assertEquals("{\"exists\":{\"field\":\"user\",\"null_value\":\"@_@\"}}", dslFilter.getQueryAsJson().toString());
     }
+    
+    @Test
+    public void geoBoundingBoxTest() {
+        DSLGeoBoundingBoxFilter filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(new DSLGeoPoint(40.73, -74.1), new DSLGeoPoint(40.01, -71.12)));
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":{\"lat\":40.73,\"lon\":-74.1},\"bottom_right\":{\"lat\":40.01,\"lon\":-71.12}}}}", filter.getQueryAsJson().toString());
+        filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(new DSLGeoPoint(DSLGeoPoint.Mode.Array, 40.73, -74.1), new DSLGeoPoint(DSLGeoPoint.Mode.Array, 40.01, -71.12)));
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":[-74.1,40.73],\"bottom_right\":[-71.12,40.01]}}}", filter.getQueryAsJson().toString());
+        filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(new DSLGeoPoint(DSLGeoPoint.Mode.LatLon, 40.73, -74.1), new DSLGeoPoint(DSLGeoPoint.Mode.LatLon, 40.01, -71.12)));
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":\"40.73, -74.1\",\"bottom_right\":\"40.01, -71.12\"}}}", filter.getQueryAsJson().toString());
+        filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(new DSLGeoPoint("dr5r9ydj2y73"), new DSLGeoPoint("drj7teegpus6")) );
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":\"dr5r9ydj2y73\",\"bottom_right\":\"drj7teegpus6\"}}}", filter.getQueryAsJson().toString());
+        filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(-74.1, 40.73, -71.12, 40.01) );
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top\":-74.1,\"bottom\":-71.12,\"right\":40.01,\"left\":40.73}}}", filter.getQueryAsJson().toString());
+        filter = new DSLGeoBoundingBoxFilter("pin.location", new DSLGeoBox(new DSLGeoPoint(40.73, -74.1), new DSLGeoPoint(40.01, -71.12))).setType(DSLGeoBoundingBoxFilter.Type.Indexed);
+        assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":{\"lat\":40.73,\"lon\":-74.1},\"bottom_right\":{\"lat\":40.01,\"lon\":-71.12}},\"type\":\"indexed\"}}", filter.getQueryAsJson().toString());
+    }
+    
 }
