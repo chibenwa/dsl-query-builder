@@ -18,6 +18,20 @@ You have two basic objects :
   - You have the same thing with **DSLFilter**.
   - You can combine a query and filter using the **DSLQueryBuilder**. This object is here to make the creation of a query easier : if you have only a filter, the JSON generated will be a filtered match all query, if it is a query with no filter it will return the JSON of your query, and if you decide to combine a query with a filter, it will create a filtered query.
 
+### Install
+
+  1. Clone this project
+  2. Run 'maven clean package install'
+  3. Add this as a maven dependency :
+
+```
+    <dependency>
+      <groupId>tellier.es.dsl.query.builder</groupId>
+      <artifactId>dsl-query-builder</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+```
+
 ### Examples
 
 #### Using Jest
@@ -172,6 +186,8 @@ More generically, it provides almost every queries and filters listed [here](htt
 ## What to come ?
 
 I still need to extend the number of filters I am supporting. I think I will have a first release in the coming days.
+
+I think I will also add a Mapping Builder ( I was compelled to do it by hand ) and Index Builder ( idem ).
 
 ## License
 
