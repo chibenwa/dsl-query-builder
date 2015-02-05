@@ -26,7 +26,7 @@ import com.google.gson.JsonPrimitive;
  *
  * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
  */
-public class DSLTermQuery {
+public class DSLTermQuery implements DSLMultiTermQuery {
 
     private static final String TERM = "term";
     private static final String BOOST = "boost";
