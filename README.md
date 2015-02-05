@@ -167,16 +167,31 @@ would give :
 }
 ```
 
+More generically, it provides almost every queries and filters listed [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html).
+
 ## What to come ?
 
-I will implement each DSL operation you can perform with Elastic Search. Just give me one or two months to write it down...
+I still need to extend the number of filters I am supporting. I think I will have a first release in the coming days.
 
 ## License
 
-It is developped under the Licensed under the Apache License, Version 2.0 (the "License") :
+It is developed under the Licensed under the Apache License, Version 2.0 (the "License") :
 
+```
 you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+```
+
+## Contribute
+
+You feel I missed something ? You want to support new DSL features ?
+
+Well, just fork me, and submit pull requests.
+
+You need to :
+
+  - provide tests for what you implemented
+  - links to official ElasticSearch documentations for feature you implemented
