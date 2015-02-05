@@ -270,4 +270,12 @@ public class DSLQueriesTest {
         DSLSpanMultiTermQuery query = new DSLSpanMultiTermQuery(new DSLPrefixQuery("user", "ki").setBoost(1.08));
         assertEquals("{\"span_multi\":{\"match\":{\"prefix\":{\"user\":{\"prefix\":\"ki\",\"boost\":1.08}}}}}", query.getQueryAsJson().toString());
     }
+
+    @Test
+    public void termTest() {
+        DSLTermQuery query = new DSLTermQuery("user", "kimchy");
+        assertEquals("{\"term\":{\"user\":\"kimchy\"}}", query.getQueryAsJson().toString());
+        query.setBoost(2.0);
+        assertEquals("{\"term\":{\"user\":{\"term\":\"kimchy\",\"boost\":2.0}}}", query.getQueryAsJson().toString());
+    }
 }
