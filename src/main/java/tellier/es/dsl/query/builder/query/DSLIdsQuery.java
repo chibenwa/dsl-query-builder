@@ -37,28 +37,47 @@ public class DSLIdsQuery implements DSLQuery {
     private static final String VALUES = "values";
 
     private List<String> values = new ArrayList<String>();
-    private String type;
+    private List<String> types = new ArrayList<String>();
 
     public DSLIdsQuery addValue(String value) {
         values.add(value);
         return this;
     }
 
-    public DSLIdsQuery(String type) {
-        this.type = type;
+    public DSLIdsQuery addType(String type) {
+        types.add(type);
+        return this;
     }
 
     public JsonObject getQueryAsJson() {
         JsonObject result = new JsonObject();
         JsonObject idsObject = new JsonObject();
-        JsonArray idsArray = new JsonArray();
         result.add(IDS, idsObject);
+        if(types.size()>0) {
+            if(types.size() == 1) {
+                idsObject.add(TYPE, new JsonPrimitive(types.get(0)));
+            } else {
+                idsObject.add(TYPE, getTypesArray());
+            }
+        }
+        idsObject.add(VALUES, getIdsArray());
+        return result;
+    }
+
+    private JsonArray getIdsArray() {
+        JsonArray idsArray = new JsonArray();
         for(String id : values) {
             idsArray.add(new JsonPrimitive(id));
         }
-        idsObject.add(TYPE, new JsonPrimitive(type));
-        idsObject.add(VALUES, idsArray);
-        return result;
+        return idsArray;
+    }
+
+    private JsonArray getTypesArray() {
+        JsonArray typesArray = new JsonArray();
+        for(String type : types) {
+            typesArray.add(new JsonPrimitive(type));
+        }
+        return typesArray;
     }
 
 }
