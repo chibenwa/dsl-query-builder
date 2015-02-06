@@ -3,7 +3,8 @@ package tellier.es.dsl.query.builder.query;
 import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLDoc;
 import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
-import tellier.es.dsl.query.builder.Utilities.DSLPoint;
+import tellier.es.dsl.query.builder.Utilities.shape.DSLEnvelope;
+import tellier.es.dsl.query.builder.Utilities.shape.DSLPoint;
 import tellier.es.dsl.query.builder.filter.DSLExistFilter;
 import tellier.es.dsl.query.builder.filter.DSLFilter;
 
@@ -132,7 +133,8 @@ public class DSLQueriesTest {
 
     @Test
     public void geoShapeTest() {
-        DSLGeoShapeQuery query = new DSLGeoShapeQuery("envelope").addPoint(new DSLPoint(13d, 53d)).addPoint(new DSLPoint(14d, 52d));
+        DSLGeoShapeQuery query = new DSLGeoShapeQuery("location", new DSLEnvelope().addCoordinate(new DSLPoint(13.0,53.0))
+                .addCoordinate(new DSLPoint(14.0, 52.0)));
         assertEquals("{\"geo_shape\":{\"location\":{\"shape\":{\"type\":\"envelope\",\"coordinates\":[[13.0,53.0],[14.0,52.0]]}}}}", query.getQueryAsJson().toString());
     }
 
