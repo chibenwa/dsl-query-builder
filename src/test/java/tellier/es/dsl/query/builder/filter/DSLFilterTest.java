@@ -212,4 +212,18 @@ public class DSLFilterTest {
         DSLLimitFilter filter = new DSLLimitFilter(100);
         assertEquals("{\"limit\":{\"value\":100}}", filter.getQueryAsJson().toString());
     }
+    
+    @Test
+    public void matchAllTest() {
+        DSLMatchAllFilter filter = new DSLMatchAllFilter();
+        assertEquals("{\"match_all\":{}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void missingTest() {
+        DSLMissingFilter filter = new DSLMissingFilter("user");
+        assertEquals("{\"missing\":{\"field\":\"user\"}}", filter.getQueryAsJson().toString());
+        filter.setExistence(true).setNullValue(false);
+        assertEquals("{\"missing\":{\"field\":\"user\",\"existence\":true,\"null_value\":false}}", filter.getQueryAsJson().toString());
+    }
 }
