@@ -55,7 +55,7 @@ public class DSLHasParentFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject hasChildObject = new JsonObject();
         result.add(HAS_PARENT, hasChildObject);

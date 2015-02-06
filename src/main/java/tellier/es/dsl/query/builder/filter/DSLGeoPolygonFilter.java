@@ -47,7 +47,7 @@ public class DSLGeoPolygonFilter implements DSLFilter {
         return this;
     }
     
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject geoPolygonObject = new JsonObject();
         JsonObject fieldObject = new JsonObject();

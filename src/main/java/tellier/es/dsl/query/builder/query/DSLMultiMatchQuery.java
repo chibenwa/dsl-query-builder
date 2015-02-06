@@ -15,14 +15,10 @@ import java.util.List;
  * See : http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
  */
 public class DSLMultiMatchQuery implements DSLQuery{
-    public final String BEST_FIELDS = "best_fields";
-    public final String MOST_FIELDS = "most_fields";
-    public final String CROSS_FIELDS = "cross_fields";
-    public final String PHRASE = "phrase";
-    public final String PHRASE_PREFIX = "phrase_prefix";
-    public final String USE_DIS_MAX = "use_dis_max";
-    public final String MULTI_MATCH = "multi_match";
-    public final String FIELDS = "fields";
+    private static final String USE_DIS_MAX = "use_dis_max";
+    private static final String MULTI_MATCH = "multi_match";
+    private static final String FIELDS = "fields";
+    private static final String TYPE = "type";
 
     private String query;
     private List<String> fields;
@@ -30,12 +26,22 @@ public class DSLMultiMatchQuery implements DSLQuery{
     private DSLMultiMatchQuery.Type type;
     private MatchUtilities matchUtilities;
 
-    enum Type {
-        BEST_FIELDS,
-        MOST_FIELDS,
-        CROSS_FIELDS,
-        PHRASE,
-        PHRASE_PREFIX
+    public enum Type {
+        BEST_FIELDS("best_fields"),
+        MOST_FIELDS("most_fields"),
+        CROSS_FIELDS("cross_fields"),
+        PHRASE("phrase"),
+        PHRASE_PREFIX("phrase_prefix");
+        
+        private String tag;
+        
+        Type(String tag) {
+            this.tag = tag;
+        }
+        
+        public String getTag() {
+            return tag;
+        }
     }
 
     public DSLMultiMatchQuery(String query) {
@@ -74,19 +80,8 @@ public class DSLMultiMatchQuery implements DSLQuery{
             jsonArrayFields.add(new JsonPrimitive(field));
         }
         multiMatchObject.add(FIELDS, jsonArrayFields);
-        switch (type) {
-            case MOST_FIELDS:
-                multiMatchObject.add(TYPE, new JsonPrimitive(MOST_FIELDS));
-                break;
-            case CROSS_FIELDS:
-                multiMatchObject.add(TYPE, new JsonPrimitive(CROSS_FIELDS));
-                break;
-            case PHRASE:
-                multiMatchObject.add(TYPE, new JsonPrimitive(PHRASE));
-                break;
-            case PHRASE_PREFIX:
-                multiMatchObject.add(TYPE, new JsonPrimitive(PHRASE_PREFIX));
-                break;
+        if(type != Type.BEST_FIELDS) {
+            multiMatchObject.add(TYPE, new JsonPrimitive(type.getTag()));
         }
         if(!use_dis_max) {
             multiMatchObject.add(USE_DIS_MAX, new JsonPrimitive(false));

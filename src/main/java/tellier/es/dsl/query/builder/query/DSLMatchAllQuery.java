@@ -22,6 +22,8 @@ import com.google.gson.JsonObject;
 
 /**
  * Return a query that match any document.
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html
  */
 public class DSLMatchAllQuery implements DSLQuery {
     public final String MATCH_ALL = "match_all";

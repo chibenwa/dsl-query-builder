@@ -22,9 +22,14 @@ import com.google.gson.JsonObject;
 
 /**
  * Represents a AND filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-and-filter.html
  */
 public class DSLAndFilter extends DSLBooleanOperationFilter {
-    public JsonObject getQueryAsJson() {
+
+    private static final String AND = "and";
+    
+    public JsonObject getFilterAsJson() {
         return getBoolQueryAsJson(AND);
     }
 }

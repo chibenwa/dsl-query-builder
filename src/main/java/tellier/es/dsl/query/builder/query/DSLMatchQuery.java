@@ -25,13 +25,16 @@ import tellier.es.dsl.query.builder.Utilities.MatchUtilities;
 
 /**
  * Represents a query getting documents matching a search criterion in a given field.
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html
  */
 public class DSLMatchQuery implements DSLQuery{
-    public final String MATCH = "match";
-    public final String LENIENT = "lenient";
-    public final String SLOP = "slop";
-    public final String PHRASE = "phrase";
-    public final String PHRASE_PREFIX = "phrase_prefix";
+    private static final String MATCH = "match";
+    private static final String LENIENT = "lenient";
+    private static final String SLOP = "slop";
+    private static final String PHRASE = "phrase";
+    private static final String PHRASE_PREFIX = "phrase_prefix";
+    private static final String TYPE = "type";
 
     private String field;
     private String searchCriterion;
@@ -105,9 +108,19 @@ public class DSLMatchQuery implements DSLQuery{
     }
 
     public enum Type {
-        MATCH,
-        MATCH_PHRASE,
-        MATCH_PHRASE_PREFIX
+        MATCH("match"),
+        MATCH_PHRASE("phrase"),
+        MATCH_PHRASE_PREFIX("phrase_prefix");
+        
+        private String tag;
+
+        Type(String tag) {
+            this.tag = tag;
+        }
+
+        public String getTag() {
+            return tag;
+        }
     }
 
     public DSLMatchQuery setMinimumShouldMatch(DSLMinimumShouldMatch minimumShouldMatch) {
@@ -133,17 +146,10 @@ public class DSLMatchQuery implements DSLQuery{
         JsonObject queryJson = new JsonObject();
         queryJson.add(QUERY, new JsonPrimitive(searchCriterion) );
         if(type != Type.MATCH) {
-            switch (type) {
-                case MATCH_PHRASE:
-                    queryJson.add(TYPE, new JsonPrimitive(PHRASE));
-                    break;
-                case MATCH_PHRASE_PREFIX:
-                    queryJson.add(TYPE, new JsonPrimitive(PHRASE_PREFIX));
-                    break;
-            }
-            if(slop != null) {
-                queryJson.add(SLOP, new JsonPrimitive(slop));
-            }
+            queryJson.add(TYPE, new JsonPrimitive(type.getTag()));
+        }
+        if(slop != null) {
+            queryJson.add(SLOP, new JsonPrimitive(slop));
         }
         if(lenient) {
             queryJson.add(LENIENT, new JsonPrimitive(true));

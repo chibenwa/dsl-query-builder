@@ -40,7 +40,7 @@ public class DSLIdsFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         return query.getQueryAsJson();
     }
     

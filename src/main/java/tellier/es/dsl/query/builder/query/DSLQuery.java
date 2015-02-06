@@ -26,16 +26,11 @@ import com.google.gson.JsonObject;
  * The basic operation is to get it as a JSON.
  */
 public interface DSLQuery {
-    public final String SCORE_MODE = "score_mode";
-    public final String PATH = "path";
-    public final String AVG = "avg";
-    public final String SUM = "sum";
-    public final String MAX = "max";
-    public final String NONE = "none";
+
     public final String QUERY = "query";
-    public final String TYPE = "type";
 
     /**
+     * Build this DSL query as a Json object
      *
      * @return JsonObject that will perform this query
      */

@@ -33,10 +33,10 @@ import java.util.List;
  * to combine these elements in a single query.
  */
 public class DSLBoolQuery implements DSLQuery {
-    public final String BOOL = "bool";
-    public final String MUST = "must";
-    public final String SHOULD = "should";
-    public final String MUST_NOT = "must_not";
+    private static final  String BOOL = "bool";
+    private static final  String MUST = "must";
+    private static final  String SHOULD = "should";
+    private static final  String MUST_NOT = "must_not";
 
     private List<DSLQuery> mustQueries;
     private List<DSLQuery> shouldQueries;

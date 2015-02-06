@@ -61,7 +61,7 @@ public class DSLGeoShapeFilter implements DSLFilter {
         this.isStored = false;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject geoShapeObject = new JsonObject();
         JsonObject locationObject = new JsonObject();

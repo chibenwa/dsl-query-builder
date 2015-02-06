@@ -24,6 +24,8 @@ import tellier.es.dsl.query.builder.Utilities.DSLRange;
 
 /**
  * Represents a RangeFilter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-range-filter.html
  */
 public class DSLRangeFilter implements DSLFilter{
     private DSLRange dslRange;
@@ -72,7 +74,7 @@ public class DSLRangeFilter implements DSLFilter{
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         return dslRange.getAsJson();
     }
 

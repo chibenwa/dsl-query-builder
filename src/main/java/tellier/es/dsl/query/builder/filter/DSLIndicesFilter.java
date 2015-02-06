@@ -76,7 +76,7 @@ public class DSLIndicesFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject indicesObject = new JsonObject();
         result.add(INDICES, indicesObject);
@@ -85,9 +85,9 @@ public class DSLIndicesFilter implements DSLFilter {
             indicesArray.add(new JsonPrimitive(indice));
         }
         indicesObject.add(INDICES, indicesArray);
-        indicesObject.add(FILTER, filter.getQueryAsJson());
+        indicesObject.add(FILTER, filter.getFilterAsJson());
         if(noMatchFilter != null) {
-            indicesObject.add(NO_MATCH_FILTER, noMatchFilter.getQueryAsJson());
+            indicesObject.add(NO_MATCH_FILTER, noMatchFilter.getFilterAsJson());
         } else if(noMatchMode != NoMatchMode.ALL) {
             indicesObject.add(NO_MATCH_FILTER, new JsonPrimitive(noMatchMode.getTag()));
         }

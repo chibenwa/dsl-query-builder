@@ -30,7 +30,6 @@ import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
 public class DSLGeoBoundingBoxFilter implements DSLFilter {
     
     private static final String GEO_BOUNDING_BOX = "geo_bounding_box";
-    private static final String CACHE = "_cache";
     private static final String TYPE = "type";
     
     enum Type {
@@ -70,7 +69,7 @@ public class DSLGeoBoundingBoxFilter implements DSLFilter {
         return this;
     }
     
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject fieldObject = new JsonObject();
         result.add(GEO_BOUNDING_BOX, fieldObject);

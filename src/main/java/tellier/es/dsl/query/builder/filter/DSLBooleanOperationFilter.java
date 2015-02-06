@@ -49,7 +49,7 @@ public abstract class DSLBooleanOperationFilter implements DSLFilter {
         return this;
     }
 
-    public abstract JsonObject getQueryAsJson();
+    public abstract JsonObject getFilterAsJson();
 
     protected JsonArray getFilterAsJsonArray() {
         if(filters.size() == 0) {
@@ -57,7 +57,7 @@ public abstract class DSLBooleanOperationFilter implements DSLFilter {
         }
         JsonArray result = new JsonArray();
         for(DSLFilter filter : filters) {
-            result.add(filter.getQueryAsJson());
+            result.add(filter.getFilterAsJson());
         }
         return result;
     }

@@ -51,7 +51,7 @@ public class DSLMissingFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject missingObject = new JsonObject();
         result.add(MISSING, missingObject);

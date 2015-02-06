@@ -22,17 +22,22 @@ import com.google.gson.JsonObject;
 
 /**
  * Represents a NOT filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-not-filter.html
  */
 public class DSLNotFilter implements DSLFilter {
+
+    private final static String NOT = "not";
+    
     private DSLFilter filter;
 
     public DSLNotFilter(DSLFilter filter) {
         this.filter = filter;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject body = new JsonObject();
-        body.add(NOT, filter.getQueryAsJson());
+        body.add(NOT, filter.getFilterAsJson());
         return body;
     }
 }

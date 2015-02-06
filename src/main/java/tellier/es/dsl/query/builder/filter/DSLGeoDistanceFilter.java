@@ -32,7 +32,6 @@ public class DSLGeoDistanceFilter implements DSLFilter {
     
     private static final String GEO_DISTANCE = "geo_distance";
     private static final String DISTANCE = "distance";
-    private static final String CACHE = "_cache";
     private static final String DISTANCE_TYPE = "distance_type";
     private static final String OPTIMIZE_BBOX = "optimize_bbox";
     
@@ -98,7 +97,7 @@ public class DSLGeoDistanceFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject geoDistanceObject = new JsonObject();
         result.add(GEO_DISTANCE, geoDistanceObject);

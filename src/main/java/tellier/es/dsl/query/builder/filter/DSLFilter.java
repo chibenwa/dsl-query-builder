@@ -26,21 +26,13 @@ import com.google.gson.JsonObject;
  * The basic operation is to get it as a JSON.
  */
 public interface DSLFilter {
-    public final String AND = "and";
-    public final String OR = "or";
-    public final String NOT = "not";
-    public final String TERM = "term";
+    
     public final String CACHE = "_cache";
-    public final String NESTED = "nested";
-    public final String PATH = "path";
-    public final String FILTER = "filter";
-    public final String EXISTS = "exists";
     public final String FIELD = "field";
-    public final String NULL_VALUE = "null_value";
 
     /**
      *
      * @return JsonObject that will perform this filter
      */
-    public JsonObject getQueryAsJson();
+    public JsonObject getFilterAsJson();
 }

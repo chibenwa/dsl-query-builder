@@ -23,8 +23,13 @@ import com.google.gson.JsonPrimitive;
 
 /**
  * Represents a term filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-term-filter.html
  */
 public class DSLTermFilter implements DSLFilter {
+
+    private final static String TERM = "term";
+    
     private boolean cache;
     private String field;
     private String filterPattern;
@@ -70,7 +75,7 @@ public class DSLTermFilter implements DSLFilter {
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         if(field.isEmpty() ) {
             return null;
         }

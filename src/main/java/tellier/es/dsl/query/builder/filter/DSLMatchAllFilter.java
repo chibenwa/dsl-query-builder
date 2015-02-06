@@ -29,7 +29,7 @@ public class DSLMatchAllFilter implements DSLFilter {
     
     private final static String MATCH_ALL = "match_all";
     
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         result.add(MATCH_ALL, new JsonObject());
         return result;

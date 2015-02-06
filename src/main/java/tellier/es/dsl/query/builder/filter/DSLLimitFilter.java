@@ -37,7 +37,7 @@ public class DSLLimitFilter implements DSLFilter {
         this.value = value;
     }
     
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject limitObject = new JsonObject();
         result.add(LIMIT, limitObject);

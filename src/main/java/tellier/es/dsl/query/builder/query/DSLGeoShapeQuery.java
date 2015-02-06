@@ -18,6 +18,7 @@
  ****************************************************************/
 package tellier.es.dsl.query.builder.query;
 
+import com.google.gson.JsonObject;
 import tellier.es.dsl.query.builder.Utilities.shape.DSLShape;
 import tellier.es.dsl.query.builder.filter.DSLGeoShapeFilter;
 
@@ -26,14 +27,20 @@ import tellier.es.dsl.query.builder.filter.DSLGeoShapeFilter;
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-geo-shape-query.html
  */
-public class DSLGeoShapeQuery extends DSLGeoShapeFilter implements DSLQuery {
+public class DSLGeoShapeQuery implements DSLQuery {
 
+    private DSLGeoShapeFilter filter;
+    
     public DSLGeoShapeQuery(String field, String id, String index, String type, String path) {
-        super(field, id, index, type, path);
+        filter = new DSLGeoShapeFilter(field, id, index, type, path);
     }
 
     public DSLGeoShapeQuery(String field, DSLShape shape) {
-        super(field, shape);
+        filter = new DSLGeoShapeFilter(field, shape);
+    }
+    
+    public JsonObject getQueryAsJson() {
+        return filter.getFilterAsJson();
     }
 
 }

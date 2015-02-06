@@ -46,7 +46,7 @@ public class DSLGeoDistanceRangeFilter implements DSLFilter {
         this.point = point;
     }
     
-    public JsonObject getQueryAsJson() {
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject geoDistanceRangeObject = new JsonObject();
         result.add(GEO_DISTANCE_RANGE, geoDistanceRangeObject);

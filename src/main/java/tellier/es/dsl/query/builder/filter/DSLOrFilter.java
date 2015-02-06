@@ -22,9 +22,13 @@ import com.google.gson.JsonObject;
 
 /**
  * Represents a OR filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-or-filter.html
  */
 public class DSLOrFilter extends DSLBooleanOperationFilter {
-    public JsonObject getQueryAsJson() {
+    private final static String OR = "or";
+    
+    public JsonObject getFilterAsJson() {
         return getBoolQueryAsJson(OR);
     }
 }
