@@ -20,6 +20,7 @@ package tellier.es.dsl.query.builder.Utilities;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import tellier.es.dsl.query.builder.filter.DSLFilter;
 
 /**
  * Code factorisation between DSLRangeFilter and DSLRangeQuery
@@ -33,6 +34,7 @@ public class DSLRange {
     private static final String RANGE = "range";
     private static final String TIME_ZONE = "time_zone";
     private static final String BOOST = "boost";
+    private static final String EXECUTION = "execution";
 
     private String field;
     private Number gtNumberValue;
@@ -44,7 +46,25 @@ public class DSLRange {
     private Type type;
     private String timeZone;
     private Double boost;
+    private ExecutionType executionType;
+    private Boolean cache;
 
+    public enum ExecutionType {
+        Index("index"),
+        Fielddata("fielddata"),
+        None("none");
+
+        private String tag;
+
+        ExecutionType(String tag) {
+            this.tag = tag;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+    }
+    
     enum Comparator {
         STRICT,
         LAXIST
@@ -60,6 +80,7 @@ public class DSLRange {
         this.gtNumberValue = null;
         this.ltNumberValue = null;
         this.type = Type.NUMBER;
+        this.executionType = ExecutionType.None;
     }
 
     public void gte(Number value) {
@@ -114,6 +135,14 @@ public class DSLRange {
         this.boost = boost;
     }
 
+    public void setExecutionType(ExecutionType executionType) {
+        this.executionType = executionType;
+    }
+
+    public void setCache(Boolean cache) {
+        this.cache = cache;
+    }
+
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
@@ -128,6 +157,12 @@ public class DSLRange {
         }
         JsonObject rangeBody = new JsonObject();
         rangeBody.add(field, conditions);
+        if(executionType != ExecutionType.None) {
+            rangeBody.add(EXECUTION, new JsonPrimitive(executionType.getTag()));
+        }
+        if(cache != null) {
+            rangeBody.add(DSLFilter.CACHE, new JsonPrimitive(cache));
+        }
         JsonObject rangeObject = new JsonObject();
         rangeObject.add(RANGE, rangeBody);
         return rangeObject;

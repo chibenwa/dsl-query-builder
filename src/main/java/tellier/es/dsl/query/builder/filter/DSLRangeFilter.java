@@ -73,6 +73,16 @@ public class DSLRangeFilter implements DSLFilter{
         dslRange.lt(string);
         return this;
     }
+    
+    public DSLRangeFilter setTimeZone(String timeZone) {
+        dslRange.setTimeZone(timeZone);
+        return this;
+    }
+    
+    public DSLRangeFilter setCache(Boolean cache) {
+        dslRange.setCache(cache);
+        return this;
+    }
 
     public JsonObject getFilterAsJson() {
         return dslRange.getAsJson();

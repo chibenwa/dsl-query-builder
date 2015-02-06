@@ -22,6 +22,7 @@ import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLDistance;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
+import tellier.es.dsl.query.builder.query.DSLMatchQuery;
 import tellier.es.dsl.query.builder.query.DSLRangeQuery;
 import tellier.es.dsl.query.builder.query.DSLTermQuery;
 
@@ -249,5 +250,11 @@ public class DSLFilterTest {
         assertEquals("{\"prefix\":{\"user\":\"ki\"}}", filter.getFilterAsJson().toString());
         filter.setCache(false);
         assertEquals("{\"prefix\":{\"user\":\"ki\",\"_cache\":false}}", filter.getFilterAsJson().toString());
+    }
+    
+    @Test
+    public void queryTest() {
+        DSLQueryFilter filter = new DSLQueryFilter(new DSLMatchQuery("field", "value"));
+        assertEquals("{\"query\":{\"match\":{\"field\":\"value\"}}}", filter.getFilterAsJson().toString());
     }
 }
