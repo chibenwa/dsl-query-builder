@@ -164,7 +164,7 @@ public class DSLQueriesTest {
 
     @Test
     public void IdsTest() {
-        DSLIdsQuery query = new DSLIdsQuery("my_type").addValue("1").addValue("4").addValue("100");
+        DSLIdsQuery query = new DSLIdsQuery().addType("my_type").addValue("1").addValue("4").addValue("100");
         assertEquals("{\"ids\":{\"type\":\"my_type\",\"values\":[\"1\",\"4\",\"100\"]}}", query.getQueryAsJson().toString());
     }
 

@@ -4,6 +4,10 @@ import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLDistance;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
+import tellier.es.dsl.query.builder.query.DSLHasParentQuery;
+import tellier.es.dsl.query.builder.query.DSLIdsQuery;
+import tellier.es.dsl.query.builder.query.DSLRangeQuery;
+import tellier.es.dsl.query.builder.query.DSLTermQuery;
 
 import static org.junit.Assert.assertEquals;
 
@@ -175,5 +179,37 @@ public class DSLFilterTest {
     public void geoPolygonTest() {
         DSLGeoPolygonFilter filter = new DSLGeoPolygonFilter("person.location").addPoint(new DSLGeoPoint(40, -70)).addPoint(new DSLGeoPoint(30, -80)).addPoint(new DSLGeoPoint(20, -90));
         assertEquals("{\"geo_polygon\":{\"person.location\":{\"points\":[{\"lat\":40.0,\"lon\":-70.0},{\"lat\":30.0,\"lon\":-80.0},{\"lat\":20.0,\"lon\":-90.0}]}}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void hasChildTest() {
+        DSLHasChildFilter filter = new DSLHasChildFilter("blog_tag", new DSLTermQuery("tag", "something"));
+        assertEquals("{\"has_child\":{\"type\":\"blog_tag\",\"query\":{\"term\":{\"tag\":\"something\"}}}}", filter.getQueryAsJson().toString());
+        filter.setMaxChildren(10).setMinChildren(2);
+        assertEquals("{\"has_child\":{\"type\":\"blog_tag\",\"query\":{\"term\":{\"tag\":\"something\"}},\"max_children\":10,\"min_children\":2}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void hasParentTest() {
+        DSLHasParentFilter filter = new DSLHasParentFilter("blog", new DSLTermQuery("tag", "something"));
+        assertEquals("{\"has_parent\":{\"parent_type\":\"blog\",\"query\":{\"term\":{\"tag\":\"something\"}}}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void idsTest() {
+        DSLIdsFilter filter = new DSLIdsFilter().addType("my_type").addValue("1").addValue("4").addValue("100");
+        assertEquals("{\"ids\":{\"type\":\"my_type\",\"values\":[\"1\",\"4\",\"100\"]}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void indicesTest() {
+        DSLIndicesFilter filter = new DSLIndicesFilter(new DSLExistFilter("tag")).addIndice("index1").addIndice("index2").setNoMatchFilter(new DSLHasChildFilter("blog", new DSLRangeQuery("date").lte("now").gte("2012/01/01 00:00:00")));
+        assertEquals("{\"indices\":{\"indices\":[\"index1\",\"index2\"],\"filter\":{\"exists\":{\"field\":\"tag\"}},\"no_match_filter\":{\"has_child\":{\"type\":\"blog\",\"query\":{\"range\":{\"date\":{\"gte\":\"2012/01/01 00:00:00\",\"lte\":\"now\"}}}}}}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void limitTest() {
+        DSLLimitFilter filter = new DSLLimitFilter(100);
+        assertEquals("{\"limit\":{\"value\":100}}", filter.getQueryAsJson().toString());
     }
 }
