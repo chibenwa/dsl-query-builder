@@ -164,4 +164,11 @@ public class DSLFilterTest {
         DSLGeoDistanceFilter filter = new DSLGeoDistanceFilter("pin.location", new DSLGeoPoint(40,-70), new DSLDistance(12, DSLDistance.Unit.Kilometer));
         assertEquals("{\"geo_distance\":{\"distance\":\"12km\",\"pin.location\":{\"lat\":40.0,\"lon\":-70.0}}}", filter.getQueryAsJson().toString());
     }
+    
+    @Test
+    public void geoDistanceRangeTest() {
+        DSLGeoDistanceRangeFilter filter = new DSLGeoDistanceRangeFilter("pin.location", new DSLDistance(200, DSLDistance.Unit.Kilometer), new DSLDistance(400, DSLDistance.Unit.Kilometer), new DSLGeoPoint(40.0, -70.0));
+        System.out.println(filter.getQueryAsJson().toString());
+        
+    }
 }
