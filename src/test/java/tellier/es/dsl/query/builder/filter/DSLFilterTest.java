@@ -1,6 +1,7 @@
 package tellier.es.dsl.query.builder.filter;
 
 import org.junit.Test;
+import tellier.es.dsl.query.builder.Utilities.DSLDistance;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
 
@@ -158,4 +159,9 @@ public class DSLFilterTest {
         assertEquals("{\"geo_bounding_box\":{\"pin.location\":{\"top_left\":{\"lat\":40.73,\"lon\":-74.1},\"bottom_right\":{\"lat\":40.01,\"lon\":-71.12}},\"type\":\"indexed\"}}", filter.getQueryAsJson().toString());
     }
     
+    @Test
+    public void geoDistanceTest() {
+        DSLGeoDistanceFilter filter = new DSLGeoDistanceFilter("pin.location", new DSLGeoPoint(40,-70), new DSLDistance(12, DSLDistance.Unit.Kilometer));
+        assertEquals("{\"geo_distance\":{\"distance\":\"12km\",\"pin.location\":{\"lat\":40.0,\"lon\":-70.0}}}", filter.getQueryAsJson().toString());
+    }
 }
