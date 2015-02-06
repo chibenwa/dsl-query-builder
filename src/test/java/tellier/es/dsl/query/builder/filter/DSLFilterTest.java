@@ -168,7 +168,12 @@ public class DSLFilterTest {
     @Test
     public void geoDistanceRangeTest() {
         DSLGeoDistanceRangeFilter filter = new DSLGeoDistanceRangeFilter("pin.location", new DSLDistance(200, DSLDistance.Unit.Kilometer), new DSLDistance(400, DSLDistance.Unit.Kilometer), new DSLGeoPoint(40.0, -70.0));
-        System.out.println(filter.getQueryAsJson().toString());
-        
+        assertEquals("{\"geo_distance_range\":{\"from\":\"200km\",\"to\":\"400km\",\"pin.location\":{\"lat\":40.0,\"lon\":-70.0}}}", filter.getQueryAsJson().toString());
+    }
+    
+    @Test
+    public void geoPolygonTest() {
+        DSLGeoPolygonFilter filter = new DSLGeoPolygonFilter("person.location").addPoint(new DSLGeoPoint(40, -70)).addPoint(new DSLGeoPoint(30, -80)).addPoint(new DSLGeoPoint(20, -90));
+        assertEquals("{\"geo_polygon\":{\"person.location\":{\"points\":[{\"lat\":40.0,\"lon\":-70.0},{\"lat\":30.0,\"lon\":-80.0},{\"lat\":20.0,\"lon\":-90.0}]}}}", filter.getQueryAsJson().toString());
     }
 }
