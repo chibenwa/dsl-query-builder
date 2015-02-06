@@ -58,7 +58,7 @@ public class DSLGeoPoint {
         this.latitude = latitude;
     }
     
-    public JsonElement getPointAsJsonElement() {
+    public JsonElement getPointAsJson() {
         if(isGeoHash) {
             return new JsonPrimitive(geoHash);
         } else if(mode == Mode.Properties) {

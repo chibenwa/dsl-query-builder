@@ -16,48 +16,42 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.filter;
+package tellier.es.dsl.query.builder.Utilities.shape;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Geo polygon filter
- * 
- * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-filter.html
+ * Represents an envelope
  */
-public class DSLGeoPolygonFilter implements DSLFilter {
+public class DSLEnvelope implements DSLShape {
     
-    private static final String GEO_POLYGON = "geo_polygon";
-    private static final String POINTS = "points";
+    private final static String ENVELOPE = "envelope";
     
-    private List<DSLGeoPoint> points = new ArrayList<DSLGeoPoint>();
-    private String field;
-
-    public DSLGeoPolygonFilter(String field) {
-        this.field = field;
-    }
-
-    public DSLGeoPolygonFilter addPoint(DSLGeoPoint point) {
-        points.add(point);
+    private List<DSLPoint> coordinates = new ArrayList<DSLPoint>();
+    
+    public DSLEnvelope addCoordinate(DSLPoint coordinate) {
+        coordinates.add(coordinate);
         return this;
     }
     
-    public JsonObject getQueryAsJson() {
-        JsonObject result = new JsonObject();
-        JsonObject geoPolygonObject = new JsonObject();
-        JsonObject fieldObject = new JsonObject();
-        result.add(GEO_POLYGON, geoPolygonObject);
-        geoPolygonObject.add(field, fieldObject);
-        JsonArray pointsArray = new JsonArray();
-        for(DSLGeoPoint point : points) {
-            pointsArray.add(point.getPointAsJson());
+    private JsonArray getCoordinatesArray() {
+        JsonArray result = new JsonArray();
+        for(DSLPoint coordinate : coordinates) {
+            result.add(coordinate.getJsonArray());
         }
-        fieldObject.add(POINTS, pointsArray);
+        return result;
+    }
+    
+    public JsonElement getShapeAsJson() {
+        JsonObject result = new JsonObject();
+        result.add(TYPE, new JsonPrimitive(ENVELOPE));
+        result.add(COORDINATES, getCoordinatesArray());
         return result;
     }
 }

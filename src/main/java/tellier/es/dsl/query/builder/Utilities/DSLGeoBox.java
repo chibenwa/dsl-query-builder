@@ -65,8 +65,8 @@ public class DSLGeoBox {
     public JsonObject getBoxAsJsonObject() {
         JsonObject result = new JsonObject();
         if(mode == Mode.Points) {
-            result.add(TOP_LEFT, topLeft.getPointAsJsonElement());
-            result.add(BOTTOM_RIGHT, bottomRight.getPointAsJsonElement());
+            result.add(TOP_LEFT, topLeft.getPointAsJson());
+            result.add(BOTTOM_RIGHT, bottomRight.getPointAsJson());
         } else {
             result.add(TOP, new JsonPrimitive(top));
             result.add(BOTTOM, new JsonPrimitive(bottom));

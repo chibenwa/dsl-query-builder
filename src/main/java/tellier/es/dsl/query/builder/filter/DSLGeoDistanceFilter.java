@@ -103,7 +103,7 @@ public class DSLGeoDistanceFilter implements DSLFilter {
         JsonObject geoDistanceObject = new JsonObject();
         result.add(GEO_DISTANCE, geoDistanceObject);
         geoDistanceObject.add(DISTANCE, new JsonPrimitive(distance.toString()));
-        geoDistanceObject.add(field, point.getPointAsJsonElement());
+        geoDistanceObject.add(field, point.getPointAsJson());
         if(cache != null) {
             geoDistanceObject.add(CACHE, new JsonPrimitive(cache));
         }

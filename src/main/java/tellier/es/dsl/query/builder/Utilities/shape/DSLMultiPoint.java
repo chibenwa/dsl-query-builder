@@ -16,48 +16,42 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.filter;
+package tellier.es.dsl.query.builder.Utilities.shape;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Geo polygon filter
- * 
- * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-filter.html
+ * Multi point shape
  */
-public class DSLGeoPolygonFilter implements DSLFilter {
+public class DSLMultiPoint implements DSLShape {
     
-    private static final String GEO_POLYGON = "geo_polygon";
-    private static final String POINTS = "points";
+    private static final String MULTIPOINT = "multipoint";
     
-    private List<DSLGeoPoint> points = new ArrayList<DSLGeoPoint>();
-    private String field;
-
-    public DSLGeoPolygonFilter(String field) {
-        this.field = field;
-    }
-
-    public DSLGeoPolygonFilter addPoint(DSLGeoPoint point) {
+    private List<DSLPoint> points = new ArrayList<DSLPoint>();
+    
+    public DSLMultiPoint addPoint(DSLPoint point) {
         points.add(point);
         return this;
     }
     
-    public JsonObject getQueryAsJson() {
-        JsonObject result = new JsonObject();
-        JsonObject geoPolygonObject = new JsonObject();
-        JsonObject fieldObject = new JsonObject();
-        result.add(GEO_POLYGON, geoPolygonObject);
-        geoPolygonObject.add(field, fieldObject);
-        JsonArray pointsArray = new JsonArray();
-        for(DSLGeoPoint point : points) {
-            pointsArray.add(point.getPointAsJson());
+    private JsonArray getPointArray() {
+        JsonArray result = new JsonArray();
+        for(DSLPoint point : points) {
+            result.add(point.getJsonArray());
         }
-        fieldObject.add(POINTS, pointsArray);
+        return result;
+    }
+    
+    public JsonElement getShapeAsJson() {
+        JsonObject result = new JsonObject();
+        result.add(TYPE, new JsonPrimitive(MULTIPOINT));
+        result.add(COORDINATES, getPointArray());
         return result;
     }
 }

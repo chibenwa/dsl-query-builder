@@ -18,58 +18,22 @@
  ****************************************************************/
 package tellier.es.dsl.query.builder.query;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import tellier.es.dsl.query.builder.Utilities.DSLPoint;
-
-import java.util.ArrayList;
-import java.util.List;
+import tellier.es.dsl.query.builder.Utilities.shape.DSLShape;
+import tellier.es.dsl.query.builder.filter.DSLGeoShapeFilter;
 
 /**
  * Represents a Geo Shape Query
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-geo-shape-query.html
  */
-public class DSLGeoShapeQuery implements DSLQuery {
+public class DSLGeoShapeQuery extends DSLGeoShapeFilter implements DSLQuery {
 
-    private final static String GEO_SHAPE = "geo_shape";
-    private final static String LOCATION = "location";
-    private final static String SHAPE = "shape";
-    private final static String TYPE = "type";
-    private final static String COORDINATES = "coordinates";
-
-    private String type;
-    private List<DSLPoint> points = new ArrayList<DSLPoint>();
-
-    public DSLGeoShapeQuery(String type) {
-        this.type = type;
+    public DSLGeoShapeQuery(String field, String id, String index, String type, String path) {
+        super(field, id, index, type, path);
     }
 
-    public DSLGeoShapeQuery addPoint(DSLPoint point) {
-        points.add(point);
-        return this;
-    }
-
-    public JsonObject getQueryAsJson() {
-        JsonObject result = new JsonObject();
-        JsonObject geoShapeObject = new JsonObject();
-        JsonObject locationObject = new JsonObject();
-        JsonObject shapeObject = new JsonObject();
-        result.add(GEO_SHAPE, geoShapeObject);
-        geoShapeObject.add(LOCATION, locationObject);
-        locationObject.add(SHAPE, shapeObject);
-        shapeObject.add(TYPE, new JsonPrimitive(type));
-        shapeObject.add(COORDINATES, getPointsArray());
-        return result;
-    }
-
-    private JsonArray getPointsArray() {
-        JsonArray pointsArray = new JsonArray();
-        for(DSLPoint point : points) {
-            pointsArray.add(point.getJsonArray());
-        }
-        return pointsArray;
+    public DSLGeoShapeQuery(String field, DSLShape shape) {
+        super(field, shape);
     }
 
 }

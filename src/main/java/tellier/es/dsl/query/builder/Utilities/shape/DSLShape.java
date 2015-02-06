@@ -16,50 +16,20 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.Utilities;
+package tellier.es.dsl.query.builder.Utilities.shape;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonElement;
 
 /**
- * Represents a point, for instance for a GeoShape Query
+ * Represents a DSL shape.
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html
  */
-public class DSLPoint {
-
-    private List<Double> coordinates = new ArrayList<Double>();
-
-    public DSLPoint(Double x) {
-        coordinates.add(x);
-    }
-
-    public DSLPoint(Double x, Double y) {
-        this(x);
-        coordinates.add(y);
-    }
-
-    public DSLPoint(Double x, Double y, Double z) {
-        this(x, y);
-        coordinates.add(z);
-    }
-
-    public DSLPoint(Double x, Double y, Double z, Double a) {
-        this(x, y, z);
-        coordinates.add(a);
-    }
-
-    public DSLPoint(Double x, Double y, Double z, Double a, Double b) {
-        this(x, y, z, a);
-        coordinates.add(b);
-    }
-
-    public JsonArray getJsonArray() {
-        JsonArray coordinatesArray = new JsonArray();
-        for(Double coordinate : coordinates) {
-            coordinatesArray.add(new JsonPrimitive(coordinate));
-        }
-        return coordinatesArray;
-    }
+public interface DSLShape {
+    
+    public final static String TYPE = "type";
+    public final static String COORDINATES = "coordinates";
+    
+    public JsonElement getShapeAsJson();
+    
 }

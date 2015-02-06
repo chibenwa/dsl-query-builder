@@ -16,48 +16,34 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.filter;
+package tellier.es.dsl.query.builder.Utilities.shape;
 
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonPrimitive;
+import tellier.es.dsl.query.builder.Utilities.DSLDistance;
 
 /**
- * Represents a Geo polygon filter
- * 
- * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-filter.html
+ * Represents a circle
  */
-public class DSLGeoPolygonFilter implements DSLFilter {
+public class DSLCircle implements DSLShape {
     
-    private static final String GEO_POLYGON = "geo_polygon";
-    private static final String POINTS = "points";
+    private final static String CIRCLE = "circle";
+    private final static String RADIUS = "radius";
     
-    private List<DSLGeoPoint> points = new ArrayList<DSLGeoPoint>();
-    private String field;
+    private DSLDistance radius;
+    private DSLPoint coordinates;
 
-    public DSLGeoPolygonFilter(String field) {
-        this.field = field;
-    }
-
-    public DSLGeoPolygonFilter addPoint(DSLGeoPoint point) {
-        points.add(point);
-        return this;
+    public DSLCircle(DSLDistance radius, DSLPoint coordinates) {
+        this.radius = radius;
+        this.coordinates = coordinates;
     }
     
-    public JsonObject getQueryAsJson() {
+    public JsonElement getShapeAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject geoPolygonObject = new JsonObject();
-        JsonObject fieldObject = new JsonObject();
-        result.add(GEO_POLYGON, geoPolygonObject);
-        geoPolygonObject.add(field, fieldObject);
-        JsonArray pointsArray = new JsonArray();
-        for(DSLGeoPoint point : points) {
-            pointsArray.add(point.getPointAsJson());
-        }
-        fieldObject.add(POINTS, pointsArray);
+        result.add(TYPE, new JsonPrimitive(CIRCLE));
+        result.add(COORDINATES, coordinates.getJsonArray());
+        result.add(RADIUS, new JsonPrimitive(radius.toString()));
         return result;
     }
 }

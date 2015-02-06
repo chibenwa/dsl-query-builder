@@ -52,7 +52,7 @@ public class DSLGeoDistanceRangeFilter implements DSLFilter {
         result.add(GEO_DISTANCE_RANGE, geoDistanceRangeObject);
         geoDistanceRangeObject.add(FROM, new JsonPrimitive(from.toString()));
         geoDistanceRangeObject.add(TO, new JsonPrimitive(to.toString()));
-        geoDistanceRangeObject.add(field, point.getPointAsJsonElement());
+        geoDistanceRangeObject.add(field, point.getPointAsJson());
         return result;
     }
 }
