@@ -242,4 +242,12 @@ public class DSLFilterTest {
         filter.setExistence(true).setNullValue(false);
         assertEquals("{\"missing\":{\"field\":\"user\",\"existence\":true,\"null_value\":false}}", filter.getFilterAsJson().toString());
     }
+    
+    @Test
+    public void prefixTest() {
+        DSLPrefixFilter filter = new DSLPrefixFilter("user", "ki");
+        assertEquals("{\"prefix\":{\"user\":\"ki\"}}", filter.getFilterAsJson().toString());
+        filter.setCache(false);
+        assertEquals("{\"prefix\":{\"user\":\"ki\",\"_cache\":false}}", filter.getFilterAsJson().toString());
+    }
 }
