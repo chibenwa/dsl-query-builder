@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.query;
+package tellier.es.dsl.query.builder.filter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -25,22 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Regex query
- *
- * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
+ * Represents a Regexp filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-regexp-filter.html
  */
-public class DSLRegexpQuery implements DSLMultiTermQuery {
+public class DSLRegexpFilter implements DSLFilter {
 
     private final static String REGEXP = "regexp";
     private final static String VALUE = "value";
-    private final static String BOOST = "boost";
+    private final static String NAME = "_name";
+    private final static String CACHE_KEY = "_cache_key";
     private final static String FLAGS = "flags";
     private final static String MAX_DETERMINIZED_STATES = "max_determinized_states";
 
     private String field;
     private String regexp;
     private List<Flag> flags = new ArrayList<Flag>();
-    private Double boost;
+    private Boolean cache;
+    private String name;
+    private String cacheKey;
     private Long maxDeterminizedStates;
 
     enum Flag {
@@ -63,31 +66,41 @@ public class DSLRegexpQuery implements DSLMultiTermQuery {
         }
     }
 
-    public DSLRegexpQuery setMaxDeterminizedStates(Long maxDeterminizedStates) {
+    public DSLRegexpFilter setMaxDeterminizedStates(Long maxDeterminizedStates) {
         this.maxDeterminizedStates = maxDeterminizedStates;
         return this;
     }
-    
-    public DSLRegexpQuery(String field, String regexp) {
+
+    public DSLRegexpFilter(String field, String regexp) {
         this.field = field;
         this.regexp = regexp;
     }
 
-    public DSLRegexpQuery addFlag(Flag flag) {
+    public DSLRegexpFilter addFlag(Flag flag) {
         flags.add(flag);
         return this;
     }
 
-    public DSLRegexpQuery setBoost(Double boost) {
-        this.boost = boost;
+    public DSLRegexpFilter setCache(Boolean cache) {
+        this.cache = cache;
         return this;
     }
 
-    public JsonObject getQueryAsJson() {
+    public DSLRegexpFilter setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public DSLRegexpFilter setCacheKey(String cacheKey) {
+        this.cacheKey = cacheKey;
+        return this;
+    }
+
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
         JsonObject regexpObject = new JsonObject();
         result.add(REGEXP, regexpObject);
-        if(flags.size()> 0 || boost != null || maxDeterminizedStates != null) {
+        if(flags.size()> 0 || cache != null || cacheKey != null || name != null ||maxDeterminizedStates != null) {
             JsonObject fieldObject = new JsonObject();
             regexpObject.add(field, fieldObject);
             fieldObject.add(VALUE, new JsonPrimitive(regexp));
@@ -102,15 +115,22 @@ public class DSLRegexpQuery implements DSLMultiTermQuery {
                 String flagString = flagsStringBuilder.toString();
                 fieldObject.add(FLAGS, new JsonPrimitive(flagString));
             }
-            if (boost != null) {
-                fieldObject.add(BOOST, new JsonPrimitive(boost));
-            }
             if(maxDeterminizedStates != null) {
                 fieldObject.add(MAX_DETERMINIZED_STATES, new JsonPrimitive(maxDeterminizedStates));
             }
         } else {
             regexpObject.add(field, new JsonPrimitive(regexp));
         }
+        if(name != null) {
+            regexpObject.add(NAME, new JsonPrimitive(name));
+        }
+        if(cache != null) {
+            regexpObject.add(CACHE, new JsonPrimitive(cache));
+        }
+        if(cacheKey != null) {
+            regexpObject.add(CACHE_KEY, new JsonPrimitive(cacheKey));
+        }
         return result;
     }
+    
 }
