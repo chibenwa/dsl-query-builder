@@ -280,4 +280,18 @@ public class DSLFilterTest {
         DSLTypeFilter filter = new DSLTypeFilter("my_type");
         assertEquals("{\"type\":{\"value\":\"my_type\"}}", filter.getFilterAsJson().toString());
     }
+    
+    @Test
+    public void termsTest() {
+        DSLTermsFilter filter = new DSLTermsFilter("user").addTerm("kimchy").addTerm("elasticsearch");
+        assertEquals("{\"terms\":{\"user\":[\"kimchy\",\"elasticsearch\"]}}", filter.getFilterAsJson().toString());
+        filter.setExecution(DSLTermsFilter.ExecutionType.Bool).setCache(true);
+        assertEquals("{\"terms\":{\"user\":[\"kimchy\",\"elasticsearch\"],\"execution\":\"bool\",\"cache\":true}}", filter.getFilterAsJson().toString());
+    }
+    
+    @Test
+    public void geoHashCellTest() {
+        DSLGeoHashCellFilter filter = new DSLGeoHashCellFilter("pin", new DSLGeoPoint(13.4080, 52.5186)).setNeighbors(true).setPrecision(3);
+        assertEquals("{\"geohash_cell\":{\"pin\":{\"lat\":13.408,\"lon\":52.5186},\"precision\":3,\"neighbors\":true}}", filter.getFilterAsJson().toString());
+    }
 }
