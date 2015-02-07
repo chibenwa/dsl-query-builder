@@ -21,6 +21,7 @@ package tellier.es.dsl.query.builder.query;
 import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLDoc;
 import tellier.es.dsl.query.builder.Utilities.DSLMinimumShouldMatch;
+import tellier.es.dsl.query.builder.Utilities.Param;
 import tellier.es.dsl.query.builder.Utilities.shape.DSLEnvelope;
 import tellier.es.dsl.query.builder.Utilities.shape.DSLPoint;
 import tellier.es.dsl.query.builder.filter.DSLExistFilter;
@@ -324,11 +325,11 @@ public class DSLQueriesTest {
 
     @Test
     public void templateTest() {
-        DSLTemplateQuery query = new DSLTemplateQuery().setSubQuery(new DSLMatchQuery("text", "{query_string}")).addParam("query_string", "all about search");
+        DSLTemplateQuery query = new DSLTemplateQuery().setSubQuery(new DSLMatchQuery("text", "{query_string}")).addParam(new Param("query_string", "all about search"));
         assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"query\":{\"match\":{\"text\":\"{query_string}\"}}}}", query.getQueryAsJson().toString());
-        query = new DSLTemplateQuery().setFile("my_template").addParam("query_string", "all about search");
+        query = new DSLTemplateQuery().setFile("my_template").addParam(new Param("query_string", "all about search"));
         assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"file\":\"my_template\"}}", query.getQueryAsJson().toString());
-        query = new DSLTemplateQuery().setId("my_template").addParam("query_string", "all about search");
+        query = new DSLTemplateQuery().setId("my_template").addParam(new Param("query_string", "all about search"));
         assertEquals("{\"template\":{\"params\":{\"query_string\":\"all about search\"},\"id\":\"my_template\"}}", query.getQueryAsJson().toString());
     }
 

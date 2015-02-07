@@ -22,6 +22,7 @@ import org.junit.Test;
 import tellier.es.dsl.query.builder.Utilities.DSLDistance;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoBox;
 import tellier.es.dsl.query.builder.Utilities.DSLGeoPoint;
+import tellier.es.dsl.query.builder.Utilities.Param;
 import tellier.es.dsl.query.builder.query.DSLMatchQuery;
 import tellier.es.dsl.query.builder.query.DSLRangeQuery;
 import tellier.es.dsl.query.builder.query.DSLTermQuery;
@@ -256,5 +257,21 @@ public class DSLFilterTest {
     public void queryTest() {
         DSLQueryFilter filter = new DSLQueryFilter(new DSLMatchQuery("field", "value"));
         assertEquals("{\"query\":{\"match\":{\"field\":\"value\"}}}", filter.getFilterAsJson().toString());
+    }
+    
+    @Test
+    public void regexpTest() {
+        DSLRegexpFilter filter = new DSLRegexpFilter("name.first", "s.*y").addFlag(DSLRegexpFilter.Flag.INTERSECTION)
+                .addFlag(DSLRegexpFilter.Flag.COMPLEMENT).addFlag(DSLRegexpFilter.Flag.EMPTY).setMaxDeterminizedStates(20000l)
+                .setName("test").setCache(true).setCacheKey("key");
+        assertEquals("{\"regexp\":{\"name.first\":{\"value\":\"s.*y\",\"flags\":\"INTERSECTION|COMPLEMENT|EMPTY\",\"max_determinized_states\":20000},\"_name\":\"test\",\"_cache\":true,\"_cache_key\":\"key\"}}", filter.getFilterAsJson().toString());
+    }
+    
+    @Test
+    public void scriptTest() {
+        DSLScriptFilter filter = new DSLScriptFilter("doc['num1'].value > 1");
+        assertEquals("{\"script\":{\"script\":\"doc['num1'].value > 1\"}}", filter.getFilterAsJson().toString());
+        filter = new DSLScriptFilter("doc['num1'].value > param1").addParam(new Param("param1", 5));
+        assertEquals("{\"script\":{\"script\":\"doc['num1'].value > param1\",\"params\":{\"param1\":5}}}", filter.getFilterAsJson().toString());
     }
 }

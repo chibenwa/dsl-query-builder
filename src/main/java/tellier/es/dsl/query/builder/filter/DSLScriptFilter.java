@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package tellier.es.dsl.query.builder.query;
+package tellier.es.dsl.query.builder.filter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -26,75 +26,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Template query
- *
- * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-template-query.html
+ * Represents Script filter
+ * 
+ * See http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-script-filter.html
  */
-public class DSLTemplateQuery implements DSLQuery {
-
-    private static final String TEMPLATE = "template";
+public class DSLScriptFilter implements DSLFilter {
+    
+    private static final String SCRIPT = "script";
     private static final String PARAMS = "params";
-    private static final String FILE = "file";
-    private static final String ID = "id";
 
-    private String id;
-    private String file;
-    private DSLQuery subQuery;
+    private String script;
     private List<Param> params = new ArrayList<Param>();
-    private Mode mode;
+    private Boolean cache;
+    
 
-    enum Mode {
-        Id,
-        File,
-        Provided,
-        None
+
+    public DSLScriptFilter(String script) {
+        this.script = script;
     }
 
-    public DSLTemplateQuery addParam(Param param) {
+    public DSLScriptFilter setCache(Boolean cache) {
+        this.cache = cache;
+        return this;
+    }
+    
+    public DSLScriptFilter addParam(Param param) {
         params.add(param);
         return this;
     }
-
-    public DSLTemplateQuery setId(String id) {
-        this.id = id;
-        this.mode = Mode.Id;
-        return this;
-    }
-
-    public DSLTemplateQuery setSubQuery(DSLQuery subQuery) {
-        this.subQuery = subQuery;
-        this.mode = Mode.Provided;
-        return this;
-    }
-
-    public DSLTemplateQuery setFile(String file) {
-        this.file = file;
-        this.mode = Mode.File;
-        return this;
-    }
-
-    public JsonObject getQueryAsJson() {
+    
+    public JsonObject getFilterAsJson() {
         JsonObject result = new JsonObject();
-        JsonObject templateObject = new JsonObject();
+        JsonObject scriptObject = new JsonObject();
         JsonObject paramsObject = new JsonObject();
-        result.add(TEMPLATE, templateObject);
-        templateObject.add(PARAMS, paramsObject);
-        for(Param param : params) {
-            paramsObject.add(param.getName(), param.getJsonPrimitive());
+        result.add(SCRIPT, scriptObject);
+        scriptObject.add(SCRIPT, new JsonPrimitive(script));
+        if(params.size() > 0) {
+            scriptObject.add(PARAMS, paramsObject);
+            for (Param param : params) {
+                paramsObject.add(param.getName(), param.getJsonPrimitive());
+            }
         }
-        switch (mode) {
-            case File :
-                templateObject.add(FILE, new JsonPrimitive(file));
-                break;
-            case Id:
-                templateObject.add(ID, new JsonPrimitive(id));
-                break;
-            case Provided:
-                templateObject.add(QUERY, subQuery.getQueryAsJson());
-                break;
+        if(cache != null) {
+            scriptObject.add(CACHE, new JsonPrimitive(cache));
         }
         return result;
     }
-
-
 }
