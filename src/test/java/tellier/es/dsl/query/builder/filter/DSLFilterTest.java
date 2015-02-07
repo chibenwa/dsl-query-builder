@@ -274,4 +274,10 @@ public class DSLFilterTest {
         filter = new DSLScriptFilter("doc['num1'].value > param1").addParam(new Param("param1", 5));
         assertEquals("{\"script\":{\"script\":\"doc['num1'].value > param1\",\"params\":{\"param1\":5}}}", filter.getFilterAsJson().toString());
     }
+    
+    @Test
+    public void typeTest() {
+        DSLTypeFilter filter = new DSLTypeFilter("my_type");
+        assertEquals("{\"type\":{\"value\":\"my_type\"}}", filter.getFilterAsJson().toString());
+    }
 }
