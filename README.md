@@ -1,5 +1,7 @@
 # DSL Query Builder
 
+**Deprecation**
+
 Note : This project is no more in development.
 
 A Java REST client had been officially released since, and should be prefered. See https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/index.html
